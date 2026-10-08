@@ -1,0 +1,2096 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ventilación Atanasio Girardot</title>
+<meta name="description" content="Consulta y verificación de las áreas mínimas de ventilación natural de los 758 espacios del Estadio Atanasio Girardot (Medellín), con visor del informe y la presentación.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cellipse cx='16' cy='16' rx='11' ry='14' fill='none' stroke='%239C700B' stroke-width='5'/%3E%3C/svg%3E">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: herramienta de consulta tipo "ficha técnica" — filtros | lista de espacios | ficha del espacio; la brisa ENE como hilo visual */
+:root{
+  --bg:#F1F2EE; --surface:#FFFFFF; --surface-2:#E7EAE3; --ink:#18211D; --muted:#58635D; --line:#D3D8D0;
+  --accent:#9C700B; --accent-soft:#F3E7C7; --air:#23768A; --air-soft:#D6EBEF;
+  --r1:#7C8A83; --r2:#3567A0; --r3:#1F8F84; --r4:#C4532F; --r5:#7F8530; --r6:#7656A6;
+  --ok:#24804F; --ok-soft:#DDF0E4; --warn:#A86B00; --warn-soft:#F8EACB; --bad:#B8322A; --bad-soft:#F7DEDB; --mec:#6650A0; --mec-soft:#E7E1F4;
+  --shadow:0 1px 2px rgba(24,33,29,.06),0 6px 20px rgba(24,33,29,.06);
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111614; --surface:#18201C; --surface-2:#212A25; --ink:#E5EAE6; --muted:#9BA7A0; --line:#2E3934;
+  --accent:#DDAE45; --accent-soft:#3A3018; --air:#62B6C8; --air-soft:#183238;
+  --r1:#98A69F; --r2:#6F9BD6; --r3:#4CC1B4; --r4:#E57F5C; --r5:#B3B85A; --r6:#A58AD6;
+  --ok:#5CC48A; --ok-soft:#183626; --warn:#E3A93A; --warn-soft:#3A2E14; --bad:#EE7A6E; --bad-soft:#3D1C19; --mec:#A994E4; --mec-soft:#2A2340;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111614; --surface:#18201C; --surface-2:#212A25; --ink:#E5EAE6; --muted:#9BA7A0; --line:#2E3934;
+  --accent:#DDAE45; --accent-soft:#3A3018; --air:#62B6C8; --air-soft:#183238;
+  --r1:#98A69F; --r2:#6F9BD6; --r3:#4CC1B4; --r4:#E57F5C; --r5:#B3B85A; --r6:#A58AD6;
+  --ok:#5CC48A; --ok-soft:#183626; --warn:#E3A93A; --warn-soft:#3A2E14; --bad:#EE7A6E; --bad-soft:#3D1C19; --mec:#A994E4; --mec-soft:#2A2340;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--air)}
+:focus-visible{outline:2px solid var(--air);outline-offset:2px;border-radius:4px}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.1;text-wrap:balance;margin:0;letter-spacing:.01em}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* ---------- barra superior ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1440px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;min-width:0}
+.brand h1{font-size:24px;text-transform:uppercase}
+.brand h1 b{color:var(--accent)}
+.brand span{font-size:12.5px;color:var(--muted)}
+.tabs{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.tab{border:0;background:transparent;white-space:nowrap;padding:8px 14px;border-radius:8px;font-weight:600;color:var(--muted);cursor:pointer;font-size:14px}
+.tab:hover{background:var(--surface-2);color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+
+.wrap{max-width:1440px;margin:0 auto;padding-inline:16px;padding-block:18px 48px}
+
+/* ---------- vista Espacios ---------- */
+.grid3{display:grid;grid-template-columns:270px minmax(0,1fr) minmax(0,440px);gap:18px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.side{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow:auto;padding:14px;display:flex;flex-direction:column;gap:16px}
+.fgroup{display:flex;flex-direction:column;gap:8px}
+.fgroup > label,.fgroup > .eyebrow{display:block}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:500}
+.chip:hover{border-color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block}
+.search{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.search:focus{border-color:var(--air);outline:none;box-shadow:0 0 0 3px var(--air-soft)}
+.mini-map svg{width:100%;height:auto;display:block}
+.linkbtn{border:0;background:none;color:var(--air);cursor:pointer;padding:0;font-weight:600;font-size:13px;text-align:left}
+
+.list-head{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:4px 2px 12px}
+.list-head h2{font-size:28px}
+.list-head .sum{color:var(--muted);font-size:14px}
+.list-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select.sel{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.rows{list-style:none;margin:0;padding:0;overflow:hidden}
+.grouphdr{padding:10px 14px 6px;background:var(--surface-2);font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;border-top:1px solid var(--line)}
+.grouphdr:first-child{border-top:0}
+.row{display:grid;grid-template-columns:6px minmax(0,1fr) 92px 112px 150px;gap:12px;align-items:center;padding:9px 14px 9px 0;border-top:1px solid var(--line);cursor:pointer;background:var(--surface)}
+.listcols{display:grid;grid-template-columns:6px minmax(0,1fr) 92px 112px 150px;gap:12px;padding:8px 14px 8px 0;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;background:var(--surface);border-bottom:1px solid var(--line)}
+.listcols span:nth-child(3),.listcols span:nth-child(5){text-align:right}
+.qv{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--muted)}
+.qv input{width:76px;padding:7px 8px;border:1px solid var(--line);border-radius:7px;background:var(--bg);font-weight:700;font-size:15px;text-align:right;color:var(--ink)}
+.qv input:focus{outline:none;border-color:var(--air);box-shadow:0 0 0 3px var(--air-soft);background:var(--surface)}
+.qv input::placeholder{color:var(--muted);font-weight:400}
+.res{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+.res .gap{font-size:12.5px;font-weight:700;white-space:nowrap}
+.gap-ok{color:var(--ok)} .gap-partial{color:var(--warn)} .gap-fail{color:var(--bad)} .gap-mec{color:var(--mec)} .gap-pending,.gap-na{color:var(--muted)}
+.cmp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+.cmp > div{padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.cmp .k{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--muted)}
+.cmp .v{font-family:var(--f-display);font-size:34px;font-weight:700;line-height:1}
+.cmp .v small{font-size:16px;margin-left:3px}
+.cmp .req{background:var(--ink);color:var(--surface)} .cmp .req .k,.cmp .req .sub2{color:var(--surface);opacity:.75}
+.cmp .dis{background:var(--surface)}
+.cmp .dis input{width:100%;font-family:var(--f-display);font-size:30px;font-weight:700;padding:2px 8px;border:2px solid var(--air);border-radius:8px;background:var(--bg);color:var(--ink)}
+.cmp .dis input:focus{outline:none;box-shadow:0 0 0 3px var(--air-soft)}
+.cmp .gapc{background:var(--surface-2)}
+.cmp .gapc.s-ok{background:var(--ok-soft)} .cmp .gapc.s-partial{background:var(--warn-soft)} .cmp .gapc.s-fail{background:var(--bad-soft)} .cmp .gapc.s-mec{background:var(--mec-soft)}
+.cmp .sub2{font-size:12px;color:var(--muted)}
+.chk small{display:block;color:var(--muted);font-size:12.5px}
+.reqm{display:none}
+.locsel{display:flex;flex-direction:column;gap:7px}
+.locsel .chip{font-size:12.5px}
+.row:hover{background:var(--bg)}
+.row[aria-current="true"]{background:var(--air-soft)}
+.row .bar{align-self:stretch;border-radius:0 3px 3px 0}
+.row .nm{font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+.row .sub{font-size:13px;color:var(--muted)}
+.row .at{text-align:right;font-weight:700;font-size:16px;white-space:nowrap}
+.row .at small{display:block;font-weight:400;font-size:11.5px;color:var(--muted)}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.st-pending{background:var(--surface-2);color:var(--muted)}
+.st-ok{background:var(--ok-soft);color:var(--ok)}
+.st-partial{background:var(--warn-soft);color:var(--warn)}
+.st-fail{background:var(--bad-soft);color:var(--bad)}
+.st-mec{background:var(--mec-soft);color:var(--mec)}
+.st-na{background:var(--surface-2);color:var(--r1)}
+
+/* ficha */
+.detail{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow:auto}
+.d-in{padding:18px;display:flex;flex-direction:column;gap:18px}
+.btn.d-close{display:none}
+.d-title h2{font-size:30px;margin-top:4px}
+.d-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:12.5px;padding:3px 9px;border-radius:6px;background:var(--surface-2);font-weight:600}
+.big{border-radius:var(--radius);background:var(--ink);color:var(--surface);padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:end}
+.big .v{font-family:var(--f-display);font-size:52px;font-weight:700;line-height:.95}
+.big .v span{font-size:26px;margin-left:4px}
+.big .l{font-size:13px;opacity:.82;grid-column:1/-1}
+.big .io{text-align:right;font-size:13px;line-height:1.45}
+.big .io b{font-size:15px}
+.howto{font-size:13.5px;color:var(--muted);margin:0}
+.callout{border-left:4px solid var(--c,var(--air));background:var(--bg);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14px}
+.callout h3{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--c,var(--air));margin-bottom:4px}
+.callout p{margin:0}
+.callout p + p{margin-top:6px}
+.sec-t{font-family:var(--f-display);font-size:19px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+
+.verify{border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:12px;background:var(--bg)}
+.vin{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.vin input[type=number]{width:120px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:17px;font-weight:600}
+.vin input[type=number]:focus,.verify textarea:focus{outline:none;border-color:var(--air);box-shadow:0 0 0 3px var(--air-soft)}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:14px;cursor:pointer}
+.chk input{margin-top:3px;width:16px;height:16px;accent-color:var(--air)}
+.verify textarea{width:100%;min-height:58px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);resize:vertical}
+.meter{position:relative;height:14px;border-radius:7px;background:var(--surface-2);overflow:visible;margin:18px 0 18px}
+.meter .fill{position:absolute;left:0;top:0;bottom:0;border-radius:7px;background:var(--muted);transition:width .25s}
+.meter .mk{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);opacity:.55}
+.meter .mk span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:11px;white-space:nowrap;color:var(--muted)}
+.verdict{border-radius:8px;padding:12px 14px;font-size:14px}
+.verdict b{display:block;font-size:15.5px;margin-bottom:2px}
+.v-ok{background:var(--ok-soft);color:var(--ink)} .v-ok b{color:var(--ok)}
+.v-partial{background:var(--warn-soft)} .v-partial b{color:var(--warn)}
+.v-fail{background:var(--bad-soft)} .v-fail b{color:var(--bad)}
+.v-mec{background:var(--mec-soft)} .v-mec b{color:var(--mec)}
+.v-pending,.v-na{background:var(--surface-2)} .v-pending b,.v-na b{color:var(--muted)}
+
+dl.facts{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+dl.facts div{padding:8px 12px;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
+dl.facts div:nth-child(2n){border-right:0}
+dl.facts dt{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+dl.facts dd{margin:0;font-weight:600}
+.idx{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.idxbar{position:relative;height:10px;background:var(--surface-2);border-radius:5px}
+.idxbar i{position:absolute;top:0;bottom:0;left:0;border-radius:5px;background:var(--accent)}
+.idxbar s{position:absolute;top:-3px;bottom:-3px;width:1.5px;background:var(--ink);opacity:.5;text-decoration:none}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 13px;font-weight:600;font-size:13.5px;cursor:pointer;display:inline-flex;gap:7px;align-items:center;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn.ghost-danger{color:var(--bad)}
+.d-empty{padding:30px 22px;color:var(--muted);display:flex;flex-direction:column;gap:12px}
+.d-empty h2{color:var(--ink);font-size:26px}
+.d-empty ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 2px 0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-size:14px;z-index:60;box-shadow:var(--shadow)}
+.paste{display:flex;flex-direction:column;gap:8px;padding:12px;border:1px dashed var(--line);border-radius:8px;margin-top:10px}
+.paste textarea{width:100%;min-height:90px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:12px;font-family:ui-monospace,Consolas,monospace}
+
+/* ---------- Resumen ---------- */
+.sum-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px}
+.card{padding:18px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpi{padding:14px 16px}
+.kpi .v{font-family:var(--f-display);font-size:34px;font-weight:700;line-height:1}
+.kpi .l{font-size:13px;color:var(--muted);margin-top:4px}
+.lede{max-width:70ch;font-size:16px;margin:6px 0 0}
+.stadium-big svg{width:100%;max-width:520px;height:auto;display:block;margin:0 auto}
+.trib-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.trib{border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;background:var(--surface);text-align:left}
+.trib:hover{border-color:var(--ink)}
+.trib h3{font-size:19px;text-transform:uppercase}
+.trib .m{font-size:13px;color:var(--muted)}
+.matrix-wrap{overflow-x:auto}
+table.matrix{border-collapse:separate;border-spacing:3px;width:100%;min-width:520px;font-size:13px}
+.matrix th{font-weight:600;color:var(--muted);text-align:center;padding:4px}
+.matrix th.rh{text-align:left;white-space:nowrap}
+.matrix td{text-align:center;padding:9px 4px;border-radius:5px;cursor:pointer;font-weight:600}
+.matrix td.nil{cursor:default;color:var(--muted);font-weight:400;background:transparent}
+.matrix td:not(.nil):hover{outline:2px solid var(--ink)}
+.reg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.reg{border:1px solid var(--line);border-top:5px solid var(--c);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--surface);cursor:pointer;text-align:left}
+.reg:hover{border-color:var(--ink);border-top-color:var(--c)}
+.reg h3{font-size:20px}
+.reg .n{font-size:13px;color:var(--muted)}
+.reg p{margin:0;font-size:13.5px}
+.progress{height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden;display:flex}
+.progress i{display:block;height:100%}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;gap:5px;align-items:center}
+.recs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.recs li{padding:12px 14px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+.recs b{display:block;font-family:var(--f-display);font-size:18px;text-transform:uppercase;letter-spacing:.02em}
+.stack{display:flex;flex-direction:column;gap:18px}
+
+/* ---------- Documentos ---------- */
+.docs{display:grid;grid-template-columns:290px minmax(0,1fr);gap:18px;align-items:start}
+.seg{display:flex;background:var(--surface-2);border-radius:9px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;padding:8px 6px;border-radius:7px;font-weight:600;font-size:13px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.toc{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.toc button{width:100%;text-align:left;border:0;background:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:13.5px;display:flex;justify-content:space-between;gap:8px}
+.toc button:hover{background:var(--surface-2)}
+.toc button[aria-current="true"]{background:var(--air-soft);color:var(--ink);font-weight:600}
+.toc button span:last-child{color:var(--muted);font-variant-numeric:tabular-nums}
+.viewer{padding:12px}
+.vbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-bottom:12px}
+.vbar .pg{display:flex;align-items:center;gap:6px;font-size:14px}
+.vbar input{width:58px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);text-align:center}
+.vbar .sp{flex:1}
+.pagebox{background:var(--surface-2);border-radius:8px;padding:12px;overflow:auto;display:flex;justify-content:center}
+.pagebox img{display:block;box-shadow:var(--shadow);background:#fff;max-width:100%;height:auto}
+.pagebox.zoom img{max-width:none;width:160%}
+.docnote{font-size:13px;color:var(--muted);margin-top:10px}
+
+/* ---------- Guía ---------- */
+.guide{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.guide .card h2{font-size:26px;margin-bottom:10px}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:12px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
+.steps li::before{content:counter(s);font-family:var(--f-display);font-weight:700;font-size:20px;width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.gl{margin:0;display:flex;flex-direction:column;gap:10px}
+.gl dt{font-weight:700}
+.gl dd{margin:0;color:var(--muted);font-size:14.5px}
+table.simple{width:100%;border-collapse:collapse;font-size:14px}
+.simple th,.simple td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.simple th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.formula{font-family:ui-monospace,Consolas,monospace;font-size:13.5px;background:var(--bg);padding:10px 12px;border-radius:6px;line-height:1.8}
+.full{grid-column:1/-1}
+
+
+/* ---------- Recorrido animado ---------- */
+.tour{overflow:hidden}
+.tour-prog{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;padding:16px 18px 0}
+.tour-prog button{border:0;background:none;padding:6px 0 0;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;min-width:0}
+.tour-prog i{display:block;height:5px;border-radius:3px;background:var(--surface-2);transition:background .3s}
+.tour-prog span{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tour-prog .done i{background:var(--accent)}
+.tour-prog .cur i{background:var(--ink)}
+.tour-prog .cur span{color:var(--ink);font-weight:600}
+.tour-body{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);min-height:540px}
+.stage{background:var(--bg);margin:14px;border-radius:10px;padding:22px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:14px;min-width:0}
+.narr{padding:22px 24px 22px 8px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.narr h2{font-size:34px}
+.narr p{margin:0;max-width:54ch}
+.narr .key{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:14px}
+.narr .key b{color:var(--accent)}
+.tnav{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap;padding-top:8px}
+.rv{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
+.rv.in{opacity:1;transform:none}
+.ref-h{font-size:26px;margin:28px 0 12px}
+.intro-banner{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--accent-soft);border-radius:var(--radius);padding:12px 16px;margin-bottom:14px}
+.intro-banner p{margin:0;font-size:14.5px}
+.intro-banner b{font-family:var(--f-display);font-size:19px;text-transform:uppercase;letter-spacing:.02em;display:block}
+
+/* paso 1: organización */
+.org{display:flex;flex-direction:column;gap:12px}
+.org-l{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:center}
+.org-l .lab{font-family:var(--f-display);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px;color:var(--muted)}
+.org-o{display:flex;flex-wrap:wrap;gap:6px}
+.org-o span{padding:5px 10px;border-radius:6px;border:1px solid var(--line);background:var(--surface);font-size:13px;transition:all .35s}
+.org-o span.pick{background:var(--ink);color:var(--surface);border-color:var(--ink);transform:scale(1.06)}
+.slide{position:relative;border-radius:6px;overflow:hidden;box-shadow:var(--shadow);background:#fff;max-width:620px}
+.slide img{display:block;width:100%;height:auto}
+.slide .hl{position:absolute;left:2%;width:58.2%;top:40%;height:3.3%;border:2.5px solid var(--accent);border-radius:3px;box-shadow:0 0 0 999px rgba(0,0,0,.28);opacity:0;transition:opacity .5s}
+.slide.in .hl{opacity:1;animation:pulse 1.6s ease-in-out 2}
+.slide figcaption{font-size:12px;color:var(--muted);padding:6px 2px 0;background:var(--bg)}
+@keyframes pulse{50%{border-color:var(--ink)}}
+
+/* paso 2: anatomía */
+.anat-wrap{overflow-x:auto}
+table.anat{border-collapse:separate;border-spacing:3px 0;font-size:12.5px;min-width:620px;width:100%}
+.anat th{background:var(--ink);color:var(--surface);font-weight:600;padding:7px 6px;text-align:center;cursor:pointer;transition:all .3s;border-radius:5px 5px 0 0}
+.anat td{background:var(--surface);padding:9px 6px;text-align:center;border-bottom:4px solid var(--g);transition:all .3s;cursor:pointer;font-weight:600;border-radius:0 0 5px 5px}
+.anat th.on{background:var(--g);color:var(--surface)}
+.anat td.on{background:color-mix(in srgb,var(--g) 18%,var(--surface));transform:translateY(-2px)}
+.anat .dim{opacity:.35}
+.anat-say{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-items:baseline;background:var(--surface);border-radius:8px;padding:14px 16px;border-left:5px solid var(--g,var(--accent));min-height:96px}
+.anat-say .k{font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1;color:var(--g)}
+.anat-say .gname{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.anat-say p{margin:0;grid-column:1/-1;font-size:14px}
+.anat-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
+.anat-leg span{display:inline-flex;gap:6px;align-items:center}
+
+/* paso 3: cálculo */
+.calc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:stretch}
+.cnode{background:var(--surface);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:4px;border:1px solid var(--line);position:relative}
+.cnode .op{font-size:12px;color:var(--air);font-weight:700}
+.cnode .lab{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.cnode .val{font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1}
+.cnode .val small{font-size:15px;margin-left:3px}
+.cnode .f{font-size:12px;color:var(--muted)}
+.cnode.total{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.cnode.total .lab,.cnode.total .f{color:var(--surface);opacity:.75}
+.cnode.total .val{font-size:40px;color:var(--accent)}
+.roomfill{display:flex;gap:16px;align-items:center}
+.roomfill svg{width:150px;flex:none}
+.roomfill p{margin:0;font-size:13.5px;color:var(--muted)}
+.fillrect{transition:all 1.4s ease}
+
+/* paso 4: tribunas */
+.wind-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:center}
+.wind-grid svg{width:100%;height:auto}
+.wp{animation:wind 2.6s linear infinite}
+@keyframes wind{0%{transform:translateX(0);opacity:0}12%{opacity:.9}85%{opacity:.6}100%{transform:translateX(-330px);opacity:0}}
+.bars{display:flex;flex-direction:column;gap:12px}
+.bar-r .top{display:flex;justify-content:space-between;font-size:13px;gap:8px}
+.bar-r .top b{font-family:var(--f-display);font-size:19px}
+.bar-r .track{height:16px;background:var(--surface-2);border-radius:4px;overflow:hidden;margin-top:3px}
+.bar-r .track i{display:block;height:100%;width:0;background:var(--accent);transition:width 1s cubic-bezier(.2,.8,.2,1);border-radius:4px}
+.bar-r .sub{font-size:12px;color:var(--muted)}
+
+/* paso 5: regímenes */
+.regs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.rg{background:var(--surface);border-radius:8px;padding:12px;border-top:5px solid var(--c);display:flex;flex-direction:column;gap:5px}
+.rg .h{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.rg .h b{font-family:var(--f-display);font-size:22px;color:var(--c)}
+.rg .h span{font-size:12px;color:var(--muted)}
+.rg .nm{font-weight:700;font-size:13.5px;line-height:1.25}
+.rg .read{align-self:flex-start;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--c) 16%,var(--surface));color:var(--c)}
+.rg p{margin:0;font-size:12.5px}
+.rg .cnt{height:5px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.rg .cnt i{display:block;height:100%;width:0;background:var(--c);transition:width 1s ease}
+
+/* paso 6: vanos */
+.modes{display:flex;gap:6px;flex-wrap:wrap}
+.modes button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.room svg{width:100%;height:auto;max-height:300px}
+.flow{fill:none;stroke:var(--air);stroke-width:3;stroke-dasharray:7 9;stroke-linecap:round;animation:dash 1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-32}}
+.mode-say{background:var(--surface);border-radius:8px;padding:10px 14px;font-size:14px}
+.mode-say b{font-family:var(--f-display);font-size:19px;text-transform:uppercase;display:block}
+
+/* paso 7: verificación */
+.vm{display:flex;flex-direction:column;gap:16px}
+.vm-read{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.vm-read .big2{font-family:var(--f-display);font-size:44px;font-weight:700;line-height:1}
+.vm-track{position:relative;height:30px;border-radius:6px;display:flex;overflow:visible}
+.vm-track span{display:block;height:100%}
+.vm-needle{position:absolute;top:-8px;bottom:-8px;width:4px;margin-left:-2px;background:var(--ink);border-radius:2px;transition:left 1.3s cubic-bezier(.3,.7,.2,1);left:0}
+.vm-ticks{position:relative;height:16px;font-size:11.5px;color:var(--muted)}
+.vm-ticks span{position:absolute;transform:translateX(-50%)}
+.vm-out{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.vo{border-radius:8px;padding:10px 12px;font-size:13px;background:var(--surface);opacity:.45;transition:all .4s;border:2px solid transparent}
+.vo b{display:block;font-size:14px}
+.vo.on{opacity:1;transform:translateY(-3px)}
+.vo.bad.on{border-color:var(--bad)} .vo.bad b{color:var(--bad)}
+.vo.mid.on{border-color:var(--warn)} .vo.mid b{color:var(--warn)}
+.vo.good.on{border-color:var(--ok)} .vo.good b{color:var(--ok)}
+.vm-extra{display:flex;gap:8px;flex-wrap:wrap}
+
+/* paso 8: consideraciones */
+.cons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.cons h4{margin:0 0 6px;font-family:var(--f-display);font-size:17px;text-transform:uppercase;letter-spacing:.04em;color:var(--accent)}
+.cons ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.cons li{background:var(--surface);border-radius:7px;padding:8px 10px;font-size:12.8px;line-height:1.4}
+.cons li b{display:block;font-size:13.2px}
+
+@media (max-width:1000px){
+  .tour-body{grid-template-columns:minmax(0,1fr)}
+  .narr{padding:4px 18px 20px}
+  .tour-prog span{display:none}
+}
+@media (max-width:640px){
+  .calc,.regs,.cons,.vm-out{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .wind-grid{grid-template-columns:minmax(0,1fr)}
+  .stage{padding:14px;margin:10px}
+  .org-l{grid-template-columns:minmax(0,1fr);gap:4px}
+  .narr h2{font-size:28px}
+}
+@media (max-width:420px){ .regs,.cons,.vm-out{grid-template-columns:minmax(0,1fr)} }
+@media (prefers-reduced-motion:reduce){ .wp,.flow,.slide.in .hl{animation:none} .rv{transition:none} }
+
+.wcalc{border:1px dashed var(--line);border-radius:8px;padding:8px 12px;background:var(--surface)}
+.wcalc summary{cursor:pointer;font-weight:700;color:var(--air);font-size:13.5px;padding:2px 0}
+.wcalc[open] summary{margin-bottom:6px}
+.wrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 58px 76px 26px;gap:6px;align-items:end;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)}
+.wrow:first-child{border-top:0;padding-top:0}
+.wrow .wtype{grid-column:1/-1}
+.wrow label{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:700;min-width:0}
+.wrow select,.wrow input{width:100%;padding:6px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink)}
+.wrow .wres{font-weight:700;font-size:13.5px;text-align:right;padding-bottom:6px;white-space:nowrap}
+.wrow .wdel{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;padding-bottom:4px}
+.wtot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.open-note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center;background:var(--air-soft);border-radius:8px;padding:8px 12px;font-size:13px}
+.open-note svg{width:74px;height:auto}
+/* video */
+.video{padding:18px;margin-bottom:18px}
+.vid-head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+.vid-head h2{font-size:30px;margin-top:2px}
+.vid-head p{margin:4px 0 0;color:var(--muted);max-width:70ch}
+.vid-stage{position:relative;border-radius:10px;overflow:hidden;background:var(--bg);aspect-ratio:16/9;width:100%;max-width:1060px;margin-top:14px;border:1px solid var(--line)}
+.vid-stage svg.vid{position:absolute;inset:0;width:100%;height:100%;display:block}
+.vid-cap{position:absolute;left:50%;bottom:3.5%;transform:translateX(-50%);width:max-content;max-width:90%;background:rgba(12,16,14,.82);color:#F4F6F3;padding:7px 14px;border-radius:8px;font-size:clamp(11.5px,1.65vw,17px);text-align:center;line-height:1.35}
+.vid-cap:empty{display:none}
+.vid-big{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:0;background:var(--ink);color:var(--surface);font-weight:700;font-size:16px;padding:14px 22px;border-radius:999px;cursor:pointer;box-shadow:var(--shadow)}
+.vid-ctrl{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+.vid-speed{display:inline-flex;align-items:center;gap:6px}
+.vid-time{font-size:13px;color:var(--muted);min-width:86px}
+.vid-bar{flex:1;min-width:180px;height:10px;background:var(--surface-2);border-radius:5px;position:relative;cursor:pointer}
+.vid-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:5px;pointer-events:none}
+.vid-bar b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--surface);pointer-events:none}
+.vid-voice{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;padding:10px 12px;background:var(--surface-2);border-radius:8px}
+.vid-voice .sel{max-width:260px}
+.vid-chaps{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+.vid-chaps button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:12.5px;cursor:pointer;font-weight:600}
+.vid-chaps button[aria-current="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+
+.est-regs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.est-reg{border:1px solid var(--line);border-top:5px solid var(--c);border-radius:8px;padding:8px 10px;background:var(--surface);cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}
+.est-reg b{font-family:var(--f-display);font-size:22px;color:var(--c);line-height:1}
+.est-reg span{font-size:13px;font-weight:600}
+.est-reg:hover{border-color:var(--ink);border-top-color:var(--c)}
+.est-reg[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);border-top-color:var(--c)}
+.est-reg[aria-pressed="true"] span{color:var(--surface)}
+.est-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:end;margin-bottom:14px}
+.est-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.est-opts .modes button{font-size:13.5px;padding:6px 13px}
+.est-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px}
+.est-fig{margin:0;background:var(--bg);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.est-fig svg{width:100%;height:auto;display:block}
+.est-fig .co circle{transition:r .2s}
+.est-fig .co.on circle{fill:var(--ink)}
+.est-bottom{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;margin-top:18px}
+.est-list{margin:0;padding:0;list-style:none;counter-reset:e;display:flex;flex-direction:column;gap:8px}
+.est-list li{counter-increment:e;display:grid;grid-template-columns:30px 1fr;column-gap:10px;padding:8px 10px;border-radius:8px;font-size:14px;transition:background .2s}
+.est-list li::before{content:counter(e);grid-row:span 2;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--surface);display:grid;place-items:center;font-weight:700;font-size:13px}
+.est-list li b{display:block}
+.est-list li.on{background:var(--accent-soft)}
+.est-leg{display:flex;gap:14px;flex-wrap:wrap}
+.est-when{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--air);margin-bottom:4px}
+.est-leg span{display:inline-flex;align-items:center;gap:6px}
+.est-leg i{width:22px;height:4px;border-radius:2px;display:inline-block}
+@media (max-width:860px){ .est-regs{grid-template-columns:repeat(3,minmax(0,1fr))} .est-grid,.est-bottom{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:1180px){
+  .grid3{grid-template-columns:240px minmax(0,1fr)}
+  .detail{position:fixed;inset:0;top:0;max-height:none;z-index:50;border-radius:0;display:none;padding-top:env(safe-area-inset-top,0px)}
+  .detail.open{display:block}
+  .btn.d-close{display:inline-flex;align-self:flex-start}
+}
+@media (max-width:860px){
+  .row{grid-template-columns:6px minmax(0,1fr) auto;grid-template-areas:"b n n" "b q r";row-gap:8px}
+  .row > .bar{grid-area:b} .row > .nmw{grid-area:n} .row > .at{display:none} .row > .qv{grid-area:q} .row > .res{grid-area:r}
+  .listcols{display:none}
+  .reqm{display:inline}
+  .cmp .v{font-size:28px} .cmp .dis input{font-size:24px}
+  .grid3,.docs,.sum-grid,.guide{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;max-height:none}
+  .mini-map{max-width:240px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .reg-grid,.recs,.trib-list{grid-template-columns:minmax(0,1fr)}
+  .brand h1{font-size:20px}
+  .tabs{margin-left:0;width:100%;overflow-x:auto;flex-wrap:nowrap}
+  .tab{padding:7px 11px}
+  .big .v{font-size:44px}
+  .filters-toggle{display:inline-flex!important}
+  .side.collapsed .fbody{display:none}
+}
+.filters-toggle{display:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <h1>Ventilación natural · <b>Atanasio Girardot</b></h1>
+      <span>Consulta de áreas mínimas de abertura por espacio · Estudio bioclimático 07-10-2026</span>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Secciones">
+      <button class="tab" role="tab" id="tab-espacios" data-view="espacios">Consultar espacios</button>
+      <button class="tab" role="tab" id="tab-resumen" data-view="resumen">Resumen del proyecto</button>
+      <button class="tab" role="tab" id="tab-estrategias" data-view="estrategias">Estrategias</button>
+      <button class="tab" role="tab" id="tab-documentos" data-view="documentos">Documentos</button>
+      <button class="tab" role="tab" id="tab-guia" data-view="guia">Aprende a leer</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= ESPACIOS ================= -->
+<section id="view-espacios" class="view">
+  <div class="intro-banner" id="introBanner" hidden>
+    <p><b>¿Primera vez con estos datos?</b>Un video corto y un recorrido de 8 pasos explican cómo están organizadas las tablas, qué significa cada columna y qué tener en cuenta.</p>
+    <div class="btnrow"><button class="btn primary" id="introGo">Ver el video (3 min)</button><button class="btn" id="introClose">Ahora no</button></div>
+  </div>
+  <div class="grid3">
+    <aside class="panel side" id="side">
+      <button class="btn filters-toggle" id="ftoggle" aria-expanded="true">Filtros</button>
+      <div class="fbody" style="display:flex;flex-direction:column;gap:16px">
+        <div class="fgroup">
+          <label class="eyebrow" for="q">Buscar espacio</label>
+          <input class="search" id="q" type="search" placeholder="Ej: baño, cocina, bodega, palco…" autocomplete="off">
+        </div>
+        <div class="fgroup">
+          <div class="eyebrow">Tribuna</div>
+          <div class="mini-map" id="miniMap"></div>
+          <div class="chips" id="fTrib"></div>
+        </div>
+        <div class="fgroup">
+          <div class="eyebrow">Nivel</div>
+          <div class="chips" id="fNiv"></div>
+        </div>
+        <div class="fgroup">
+          <div class="eyebrow">Tipo de ventilación (régimen)</div>
+          <div class="chips" id="fReg"></div>
+        </div>
+        <div class="fgroup">
+          <div class="eyebrow">Estado de mi revisión</div>
+          <div class="chips" id="fSt"></div>
+        </div>
+        <button class="linkbtn" id="clearF">Quitar todos los filtros</button>
+      </div>
+    </aside>
+
+    <div style="min-width:0">
+      <div class="list-head">
+        <div>
+          <div class="eyebrow" id="listCtx">Todo el estadio</div>
+          <h2 id="listTitle">758 espacios</h2>
+          <div class="sum num" id="listSum"></div>
+        </div>
+        <div class="list-tools">
+          <label class="eyebrow" for="sort">Ordenar</label>
+          <select class="sel" id="sort">
+            <option value="nivel">Por nivel</option>
+            <option value="at">Mayor abertura primero</option>
+            <option value="nombre">Por nombre</option>
+          </select>
+        </div>
+      </div>
+      <ul class="rows panel" id="rows"></ul>
+      <div class="toolbar">
+        <button class="btn primary" id="savePdf">Descargar PDF de la revisión</button>
+        <button class="btn" id="saveJson">Descargar .json</button>
+        <button class="btn" id="loadJson">Cargar .json</button>
+        <input type="file" id="jsonIn" accept=".json,application/json" hidden>
+        <button class="btn ghost-danger" id="clearAll">Borrar mi revisión</button>
+        <span class="howto" id="clearConfirm" hidden>¿Borrar todas tus entradas? <button class="linkbtn" id="clearYes" style="color:var(--bad)">Sí, borrar</button> · <button class="linkbtn" id="clearNo">Cancelar</button></span>
+      </div>
+      <div class="paste" id="loadBox" hidden>
+        <p class="howto" style="margin:0" id="loadMsg"></p>
+        <div class="btnrow"><button class="btn primary" id="loadMerge">Combinar con mi revisión</button><button class="btn" id="loadReplace">Reemplazar mi revisión</button><button class="btn" id="loadCancel">Cancelar</button></div>
+      </div>
+      <p class="howto" style="margin-top:10px">Tu revisión se guarda en este navegador. Descarga el <b>.json</b> para seguir trabajando en otro equipo o pasárselo a un colega, y el <b>PDF</b> para entregar el resultado.</p>
+    </div>
+
+    <aside class="panel detail" id="detail" aria-live="polite"></aside>
+  </div>
+</section>
+
+<!-- ================= RESUMEN ================= -->
+<section id="view-resumen" class="view" hidden>
+  <div class="stack">
+    <div>
+      <div class="eyebrow">Estadio Atanasio Girardot · Medellín · 1.484 m s. n. m.</div>
+      <h2 style="font-size:34px;margin-top:4px">Dónde se necesita más abertura y por qué</h2>
+      <p class="lede">La brisa dominante llega del este-noreste (ENE). La tribuna Oriental la recibe de frente y necesita menos abertura; la Occidental queda a la sombra del viento y, para un mismo recinto, necesita 2,25 veces más área. Haz clic en cualquier tribuna, celda o régimen para ver sus espacios.</p>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="sum-grid">
+      <div class="panel card">
+        <div class="sec-t">Abertura requerida por tribuna</div>
+        <div class="stadium-big" id="bigMap"></div>
+        <div class="trib-list" id="tribList"></div>
+      </div>
+      <div class="stack">
+        <div class="panel card">
+          <div class="sec-t">Matriz tribuna × nivel (m² de abertura)</div>
+          <div class="matrix-wrap"><table class="matrix num" id="matrix"></table></div>
+          <p class="howto" style="margin-top:8px">El color más intenso marca más área requerida. El nivel 1 domina en todas las tribunas.</p>
+        </div>
+        <div class="panel card">
+          <div class="sec-t">Avance de mi revisión</div>
+          <div id="progressBox"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel card">
+      <div class="sec-t">Seis tipos de ventilación: qué hacer con cada uno</div>
+      <div class="reg-grid" id="regGrid"></div>
+    </div>
+    <div class="panel card">
+      <div class="sec-t">Recomendaciones de diseño bioclimático</div>
+      <ul class="recs">
+        <li><b>Oriental · captadora</b>Priorizar tomas de aire y recintos de mayor permanencia. Proteger de la lluvia los vanos frente a la fachada principal con aleros y rejillas de lamas a contraviento.</li>
+        <li><b>Occidental · tiro térmico</b>Combinar aberturas bajas (entrada) y altas (salida) para activar el efecto chimenea, conectar los recintos al anillo de circulación abierto y ubicar allí las descargas de extracción.</li>
+        <li><b>Norte y Sur · brisa paralela</b>Ventilación cruzada entre fachadas opuestas. Usar aletas o quiebravientos verticales para desviar la brisa hacia los vanos.</li>
+        <li><b>Vanos regulables</b>Las noches son frescas (16,6 °C de mínima media): los vanos de recintos ocupados deben poder modularse, por ejemplo con ventanas corredizas.</li>
+        <li><b>Rejillas permanentes</b>Baños, bodegas, cuartos técnicos y cuartos de aseo llevan rejilla de ventilación permanente, aunque tengan apoyo mecánico.</li>
+        <li><b>Espacios con aire acondicionado</b>Deben conservar ventanas corredizas o rejillas operables para ventilar de forma natural si el sistema falla.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ESTRATEGIAS ================= -->
+<section id="view-estrategias" class="view" hidden>
+  <div class="stack">
+    <div>
+      <div class="eyebrow">Guías gráficas de aplicación</div>
+      <h2 style="font-size:34px;margin-top:4px">Estrategias por régimen de ventilación</h2>
+      <p class="lede">Cada régimen se resuelve distinto. Elige uno para ver en isométrico y en corte cómo se puede aplicar. Son guías orientativas basadas en el informe y la presentación: la solución final la define cada especialidad.</p>
+    </div>
+    <div class="est-regs" id="estRegs" role="group" aria-label="Régimen"></div>
+    <div class="panel card">
+      <div class="est-top"><div><h2 id="estTitle" style="font-size:30px"></h2><div class="howto num" id="estMeta"></div></div><p class="howto" id="estIncl" style="margin:0;max-width:52ch"></p></div>
+      <div class="est-opts">
+        <div class="eyebrow">Opciones de aplicación · el isométrico y la sección cambian juntos</div>
+        <div class="modes" id="estSecTabs" role="group" aria-label="Opción de aplicación"></div>
+        <p class="mode-say" id="estSecTxt" style="margin:0" aria-live="polite"></p>
+      </div>
+      <div class="est-grid">
+        <figure class="est-fig"><figcaption class="eyebrow">Isométrico · el número señala cada estrategia</figcaption><div id="estIso"></div></figure>
+        <figure class="est-fig"><figcaption class="eyebrow">Sección o planta de la misma opción</figcaption><div id="estSec"></div></figure>
+      </div>
+      <div class="est-bottom">
+        <div><div class="sec-t">Estrategias</div><ol class="est-list" id="estList"></ol></div>
+        <div class="stack" style="gap:12px"><div class="callout" style="--c:var(--air)"><h3>Cómo verificarlo</h3><p id="estVerify"></p></div>
+          <div class="callout" style="--c:var(--air)"><h3>Leyenda del flujo</h3><p class="est-leg"><span><i style="background:var(--air)"></i>Aire natural</span><span><i style="background:var(--mec)"></i>Mecánico</span><span><i style="background:var(--accent)"></i>Aire caliente o descarga</span></p></div>
+          <div class="btnrow" id="estLinks"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DOCUMENTOS ================= -->
+<section id="view-documentos" class="view" hidden>
+  <div class="docs">
+    <aside class="panel side">
+      <div class="seg" role="group" aria-label="Documento">
+        <button id="docInf" aria-pressed="true">Informe técnico</button>
+        <button id="docPpt" aria-pressed="false">Presentación</button>
+      </div>
+      <p class="howto" id="docDesc"></p>
+      <ul class="toc" id="toc"></ul>
+      <a class="btn" id="pdfLink" href="pdf/informe-ventilacion-natural.pdf" target="_blank" rel="noopener">Abrir PDF original</a>
+    </aside>
+    <div class="panel viewer">
+      <div class="vbar">
+        <button class="btn" id="prevPg" aria-label="Página anterior">← Anterior</button>
+        <div class="pg"><label for="pgIn">Página</label><input id="pgIn" type="number" min="1" class="num"><span class="num" id="pgTot"></span></div>
+        <button class="btn" id="nextPg" aria-label="Página siguiente">Siguiente →</button>
+        <span class="sp"></span>
+        <button class="btn" id="zoomBtn" aria-pressed="false">Ampliar</button>
+      </div>
+      <div class="pagebox" id="pagebox"><img id="pgImg" alt="Página del documento"></div>
+      <p class="docnote">Usa las flechas ← → del teclado para pasar de página.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GUÍA ================= -->
+<section id="view-guia" class="view" hidden>
+  <div class="panel video" id="videoBox">
+    <div class="vid-head"><div><div class="eyebrow">Video animado con narración · 3 min</div><h2>La ventilación del estadio, explicada</h2>
+      <p>Cómo llega la brisa, qué significa el área de abertura, cómo leer la tabla y cómo verificar un espacio con el plano.</p></div></div>
+    <div class="vid-stage" id="vidStage"><svg class="vid" id="vidSvg" viewBox="0 0 960 540" role="img" aria-label="Video animado sobre la ventilación natural del estadio"></svg><div class="vid-cap" id="vidCap" aria-live="polite"></div><button class="vid-big" id="vidBig">▶ Reproducir</button></div>
+    <div class="vid-ctrl">
+      <button class="btn primary" id="vidPlay">▶ Reproducir</button>
+      <label class="vid-speed"><span class="howto">Velocidad</span><select class="sel" id="vidRate" aria-label="Velocidad de reproducción"><option value="1">1×</option><option value="1.25">1,25×</option><option value="1.5">1,5×</option><option value="1.75">1,75×</option><option value="2">2×</option></select></label>
+      <span class="vid-time num" id="vidTime">0:00 / 3:00</span>
+      <div class="vid-bar" id="vidBar" role="slider" tabindex="0" aria-label="Posición del video" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="vidFill"></i></div>
+    </div>
+    <div class="vid-voice">
+      <label class="chk" style="align-items:center"><input type="checkbox" id="vidVoice" checked> <span><b>Narración</b> · voz de Salomé, español de Colombia</span></label>
+      <span class="howto">El audio está grabado en la carpeta <b>audio</b>: suena igual en cualquier navegador. También está completo en <b>narracion-completa.mp3</b>.</span>
+    </div>
+    <ol class="vid-chaps" id="vidChaps"></ol>
+  </div>
+  <h2 class="ref-h" style="margin-top:6px">Recorrido paso a paso</h2>
+  <div class="panel tour">
+    <nav class="tour-prog" id="tourProg" aria-label="Pasos del recorrido"></nav>
+    <div class="tour-body">
+      <div class="stage" id="stage" aria-live="polite"></div>
+      <div class="narr">
+        <div class="eyebrow" id="tStep"></div>
+        <h2 id="tTitle"></h2>
+        <div id="tText" style="display:flex;flex-direction:column;gap:10px"></div>
+        <div class="btnrow" id="tLinks"></div>
+        <div class="tnav">
+          <button class="btn" id="tPrev">← Anterior</button>
+          <button class="btn" id="tReplay">Repetir animación</button>
+          <button class="btn primary" id="tNext">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <h2 class="ref-h">Referencia rápida</h2>
+  <div class="guide">
+    <div class="panel card">
+      <h2>Cómo revisar un espacio</h2>
+      <ol class="steps">
+        <li><div><b>Busca el espacio.</b> Escribe su nombre o filtra por tribuna y nivel, tal como aparece en los planos (ej: “Baño Hombres OCC-01”).</div></li>
+        <li><div><b>Lee la abertura requerida.</b> Es el área libre total (entrada + salida) que el espacio necesita para ventilarse solo con la brisa.</div></li>
+        <li><div><b>Mide el diseño.</b> Suma el área libre de las ventanas, rejillas o vanos que tiene ese espacio en el proyecto.</div></li>
+        <li><div><b>Escríbela en la ficha.</b> La herramienta te dice si cumple, si necesita apoyo mecánico o si la ventilación debe ser mecánica.</div></li>
+        <li><div><b>Guarda y comparte.</b> Descarga el PDF para entregar el resultado y el .json para seguir trabajando después o en otro equipo.</div></li>
+      </ol>
+    </div>
+    <div class="panel card">
+      <h2>Criterio de verificación</h2>
+      <p style="margin-top:0">Se compara el área libre del diseño con la requerida. Es el criterio del capítulo 7 del informe (baños), usado aquí como referencia para todos los espacios.</p>
+      <table class="simple">
+        <tr><th>Abertura del diseño</th><th>Resultado</th></tr>
+        <tr><td>100 % o más de la requerida</td><td><span class="pill st-ok">Cumple</span> Ventilación natural. En baños, rejilla con lamas y protección visual.</td></tr>
+        <tr><td>Entre 50 % y 100 %</td><td><span class="pill st-partial">Parcial</span> Natural + extracción mecánica de baja potencia, activada por ocupación o por horario de eventos.</td></tr>
+        <tr><td>Menos de 50 %</td><td><span class="pill st-fail">No cumple</span> Extracción mecánica como sistema principal; la abertura sirve de reposición de aire.</td></tr>
+        <tr><td>Sin vanos a fachada, cubierta ni espacio abierto</td><td><span class="pill st-mec">Revisión técnica</span> Verificar con el equipo técnico cómo se cubre el caudal del espacio (inyección, extracción, aire acondicionado u otra solución).</td></tr>
+      </table>
+      <p class="howto" style="margin-top:10px">Cocinas y locales con cocción llevan extracción mecánica siempre, aunque cumplan el área. Los baños dentro de espacios con ventilación artificial también requieren extracción.</p>
+    </div>
+    <div class="panel card">
+      <h2>Glosario en palabras simples</h2>
+      <dl class="gl">
+        <dt>Área libre de abertura (Aₜ)</dt><dd>Superficie por la que realmente pasa el aire: entrada más salida. Se expresa en m². Cuenta solo la parte que abre: una ventana corrediza de 2 hojas de 2,0 × 1,2 m (2,4 m²) aporta 1,2 m², porque una hoja queda siempre cerrada; una ventana fija no aporta. Idealmente se reparte en dos fachadas (un vano de entrada y uno de salida); si no, dos vanos en la misma fachada, uno bajo y otro alto; en último caso, un solo vano.</dd>
+        <dt>Entrada y salida</dt><dd>El cálculo asume que la salida es el 70 % de la entrada. Por eso la entrada es Aₜ ÷ 1,7 y la salida el resto.</dd>
+        <dt>Renovaciones por hora (Rph)</dt><dd>Cuántas veces por hora se cambia todo el aire del espacio. Un baño se calcula con 20, una cocina con 30 y una sala de máquinas con 40.</dd>
+        <dt>Caudal (m³/h)</dt><dd>Volumen de aire que hay que mover cada hora. Es el dato que usa el ingeniero mecánico si el espacio no se puede ventilar de forma natural.</dd>
+        <dt>Eficiencia por ubicación (Ef. ub.)</dt><dd>Qué tan bien le llega la brisa a la fachada del espacio. Oriental 0,9 · Norte y Sur 0,6 · Occidental 0,4 · recinto interior sin fachada 0,2.</dd>
+        <dt>Vano: rejilla o proyectante</dt><dd>Tipo de abertura supuesto. La rejilla (eficiencia 0,35) se usó en baños, servicios, recintos técnicos y circulaciones; la ventana proyectante (0,50) en recintos ocupados, cocinas y locales.</dd>
+        <dt>Índice de abertura</dt><dd>Abertura requerida dividida por el área de piso. Sirve para comparar con las relaciones de referencia 1/15 (6,7 %), 1/12 (8,3 %) y 1/9 (11,1 %).</dd>
+      </dl>
+    </div>
+    <div class="panel card">
+      <h2>Por qué cambia según la tribuna</h2>
+      <p style="margin-top:0">El eje del estadio está girado 22° respecto al norte. Con esa geometría, la brisa ENE (1,0 a 2,9 m/s en la Torre SIATA) golpea de frente la tribuna Oriental.</p>
+      <table class="simple num">
+        <tr><th>Tribuna</th><th>Fachada</th><th>Ef.</th><th>Abertura relativa</th></tr>
+        <tr><td>Oriental</td><td>ENE ≈68° · barlovento</td><td>0,9</td><td>1,00 ×</td></tr>
+        <tr><td>Norte</td><td>NNO ≈338° · paralela</td><td>0,6</td><td>1,50 ×</td></tr>
+        <tr><td>Sur</td><td>SSE ≈158° · paralela</td><td>0,6</td><td>1,50 ×</td></tr>
+        <tr><td>Occidental</td><td>OSO ≈248° · sotavento</td><td>0,4</td><td>2,25 ×</td></tr>
+        <tr><td>Recinto técnico interior</td><td>Sin fachada (supuesto)</td><td>0,2</td><td>4,50 ×</td></tr>
+      </table>
+      <div class="sec-t" style="margin-top:16px">Cómo se calculó</div>
+      <div class="formula">V = área × altura<br>Q = V × Rph ÷ 3.600<br>Aₑ = Q ÷ (v × Ef.ub × Ef.vano) · v = 1,0 m/s<br>Aₛ = 0,7 × Aₑ &nbsp;·&nbsp; Aₜ = Aₑ + Aₛ</div>
+      <p class="howto" style="margin-top:8px">Las recomendaciones son orientativas. La solución final de cada recinto (tipo de vano, ubicación, protecciones y sistemas) corresponde a cada especialidad.</p>
+    </div>
+  </div>
+</section>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="data.js"></script>
+<script>
+(function(){
+const D = window.VENT_DATA;
+const SP = D.spaces;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const f2 = n => n.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2});
+const f1 = n => n.toLocaleString('es-CO',{minimumFractionDigits:1,maximumFractionDigits:1});
+const f0 = n => n.toLocaleString('es-CO',{maximumFractionDigits:0});
+const pct = n => (n*100).toLocaleString('es-CO',{maximumFractionDigits:1})+' %';
+
+const TRIB = {
+  OCC:{name:'Occidental',fach:'OSO ≈248°',pos:'Sotavento',ef:0.4,rel:'2,25 ×',
+    tip:'Está a la sombra del viento. Conviene no depender solo de la brisa: aberturas bajas de entrada y altas de salida (efecto chimenea) y conexión al anillo de circulación abierto. Aquí se ubican las descargas de extracción.'},
+  NOR:{name:'Norte',fach:'NNO ≈338°',pos:'Paralela a la brisa',ef:0.6,rel:'1,50 ×',
+    tip:'La brisa pasa paralela a la fachada. Mejora con entrada y salida en fachadas opuestas o a diferente altura, y con aletas o quiebravientos verticales que desvíen el aire hacia los vanos.'},
+  ORI:{name:'Oriental',fach:'ENE ≈68°',pos:'Barlovento',ef:0.9,rel:'1,00 ×',
+    tip:'Recibe la brisa de frente: es la tribuna con mejor potencial. Proteger de la lluvia impulsada por el viento con aleros y rejillas de lamas a contraviento, sobre todo frente a la fachada principal.'},
+  SUR:{name:'Sur',fach:'SSE ≈158°',pos:'Paralela a la brisa',ef:0.6,rel:'1,50 ×',
+    tip:'La brisa pasa paralela a la fachada: ventilación cruzada y aletas deflectoras. Concentra cocinas, así que las descargas de extracción van en cubierta o lejos de las tomas de aire.'}
+};
+const TORDER = ['OCC','NOR','ORI','SUR'];
+const NIV = {'N-1':'Sótano','N1':'Nivel 1','N2A':'Nivel 2A','N2B':'Nivel 2B','N3':'Nivel 3','N4':'Nivel 4','N5':'Nivel 5','N6':'Nivel 6'};
+const NSHORT = {'N-1':'Sót.','N1':'1','N2A':'2A','N2B':'2B','N3':'3','N4':'4','N5':'5','N6':'6'};
+const NORDER = Object.keys(NIV);
+const REG = {
+  R1:{name:'Abiertos y semiabiertos',short:'Abiertos',c:'--r1',incl:'Circulaciones, hall principal, accesos y filas de atención.',
+    act:'Ya se ventilan por la condición abierta del estadio. No requieren aberturas adicionales: el área calculada es solo referencial.'},
+  R2:{name:'Recintos ocupados',short:'Ocupados',c:'--r2',incl:'Oficinas, tiendas, camerinos, palcos, salones, hospitality, primeros auxilios, lactancia, refugios PMR, fan zones y halls de galería.',
+    act:'Vanos operables hacia fachadas exteriores o espacios abiertos. Si no es posible, aire acondicionado o ventilación mecánica.'},
+  R3:{name:'Baños y zonas húmedas',short:'Baños',c:'--r3',incl:'Baños públicos, PMR y familiares, duchas y jacuzzis.',
+    act:'Verificar contra las aberturas finales del diseño. Si no se alcanzan, extracción mecánica. Rejilla de ventilación permanente siempre.'},
+  R4:{name:'Cocinas y locales con cocción',short:'Cocinas',c:'--r4',incl:'Cocinas satélite, cocina central y locales comerciales tipo 3 y 4, incluidos los BarBeer.',
+    act:'Extracción mecánica indispensable en todos los casos, con la cocina en presión negativa. Las aberturas sirven como aire de reposición.'},
+  R5:{name:'Servicios y almacenamiento',short:'Servicios',c:'--r5',incl:'Bodegas, aseo, residuos, lockers y lavandería.',
+    act:'Rejilla de ventilación permanente. Los cuartos de residuos deben quedar en depresión.'},
+  R6:{name:'Recintos técnicos',short:'Técnicos',c:'--r6',incl:'Cuartos eléctricos, data center, UMAs, subestación, bombas y circulaciones técnicas.',
+    act:'Requerimiento indicativo: depende del calor que disipen los equipos y lo define la ingeniería. Data center y racks requieren climatización.'}
+};
+const ST = {pending:'Sin revisar',ok:'Cumple',partial:'Parcial',fail:'No cumple',mec:'Revisión técnica',na:'Ya ventilado'};
+const LOC = {fachada:'Fachada exterior',cubierta:'Cubierta',abierto:'Espacio abierto',ninguno:'Sin vano al exterior'};
+const locOf = r => r.loc || (r.nf ? 'ninguno' : '');
+
+/* ---------- almacenamiento local ---------- */
+const KEY='ventAG.revision.v1';
+let REV = {};
+try{ REV = JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ REV={}; }
+function saveRev(){ try{ localStorage.setItem(KEY, JSON.stringify(REV)); }catch(e){} }
+function loadPref(k,d){ try{ const v=localStorage.getItem('ventAG.'+k); return v?JSON.parse(v):d; }catch(e){ return d; } }
+function savePref(k,v){ try{ localStorage.setItem('ventAG.'+k, JSON.stringify(v)); }catch(e){} }
+
+/* ---------- lógica de verificación ---------- */
+function evaluate(s){
+  const r = REV[s.id] || {};
+  const hasV = r.v !== undefined && r.v !== null && r.v !== '' && !isNaN(r.v);
+  const ratio = hasV ? r.v / s.at : null;
+  let st='pending', title='Sin revisar', txt='Escribe el área libre de abertura que tiene este espacio en el diseño.';
+  if (locOf(r)==='ninguno'){
+    st='mec'; title='Verificar técnicamente los requerimientos de este espacio';
+    txt = `Sin vanos a fachada, cubierta ni a un espacio abierto, la ventilación natural calculada no se puede garantizar solo con la brisa. Conviene revisar con el equipo técnico cómo se cubre el caudal de ${f0(s.q)} m³/h; puede ser con inyección, extracción, aire acondicionado u otra solución.`;
+    txt += {
+      R1:' Al ser un espacio abierto, confirma primero su conexión real con el exterior.',
+      R2:' En recintos ocupados sin vano al exterior, el informe indica aire acondicionado o ventilación mecánica.',
+      R3:' En baños sin fachada, el informe indica extracción como sistema principal.',
+      R4:' Recuerda que en cocinas la extracción mecánica se mantiene en todos los casos.',
+      R5:' Si es un cuarto de residuos, debe quedar en depresión.',
+      R6: s.ef===0.2 ? ' El cálculo ya supuso que ventila a través de otro espacio: confirma si existe ese vano interior.' : ' El requerimiento depende del calor de los equipos y lo define la ingeniería.'
+    }[s.r];
+  } else if (hasV){
+    if (ratio >= 1){ st='ok'; title='Cumple con ventilación natural'; txt='La abertura del diseño alcanza la requerida.'; }
+    else if (ratio >= .5){ st='partial'; title='Parcial: natural + apoyo mecánico'; txt='Ventilación natural con extracción mecánica complementaria de baja potencia, activada por ocupación o por horario de eventos.'; }
+    else { st='fail'; title='No cumple: ventilación mecánica principal'; txt='Extracción mecánica como sistema principal; la abertura natural (o una inyección) funciona como reposición de aire.'; }
+    if (s.r==='R4') txt += ' Por ser cocina o local con cocción, la extracción mecánica con campana es obligatoria de todos modos.';
+    if (s.r==='R3' && st==='ok') txt += ' Se recomienda rejilla con lamas y protección visual.';
+    if (s.r==='R6') txt += ' El requerimiento es indicativo: confirmar con la disipación real de los equipos.';
+    if (s.r==='R1') txt += ' Recuerda que en espacios abiertos el área es solo referencial.';
+  } else if (s.r==='R1'){
+    st='na'; title='Ya ventilado por su condición abierta'; txt='No requiere aberturas adicionales. Puedes registrar un valor si quieres dejarlo documentado.';
+  }
+  return {st,title,txt,ratio,hasV,r};
+}
+
+function gapInfo(s){
+  const ev=evaluate(s), r=ev.r;
+  if(locOf(r)==='ninguno') return {ev,cls:'mec',txt:'Revisar con el equipo técnico',big:'Revisar',sub:'sin vanos al exterior'};
+  if(!ev.hasV) return {ev,cls:ev.st,txt:'',big:'—',sub:ev.st==='na'?'espacio abierto (R1)':'escribe la abertura del diseño'};
+  const d=r.v-s.at;
+  if(d>=0) return {ev,cls:'ok',txt:`Sobran ${f2(d)} m²`,big:'0,00',sub:`cumple · sobran ${f2(d)} m² (${pct(ev.ratio)})`};
+  return {ev,cls:ev.st,txt:`Faltan ${f2(-d)} m²`,big:f2(-d),sub:`tiene el ${pct(ev.ratio)} de lo requerido`};
+}
+function setVal(id,raw){
+  const rec=Object.assign({},REV[id]||{});
+  const v=parseFloat(String(raw).replace(',','.'));
+  if(String(raw).trim()!==''&&!isNaN(v)) rec.v=Math.max(0,v); else delete rec.v;
+  delete rec.ts;
+  if(Object.keys(rec).length){ rec.ts=Date.now(); REV[id]=rec; } else delete REV[id];
+  saveRev();
+}
+function resHTML(s){ const g=gapInfo(s); return `<span class="pill st-${g.ev.st}">${ST[g.ev.st]}</span><span class="gap gap-${g.cls}">${g.txt}</span>`; }
+function syncRow(id){
+  const s=SP.find(x=>x.id===id), row=document.querySelector(`.row[data-id="${id}"]`); if(!row) return;
+  row.querySelector('.res').innerHTML=resHTML(s);
+  const inp=row.querySelector('.qv input'); if(inp && document.activeElement!==inp){ const r=REV[id]; inp.value=r&&r.v!==undefined?String(r.v).replace('.',','):''; }
+}
+
+const OPEN_SVG = `<svg viewBox="0 0 80 50" aria-hidden="true"><rect x="3" y="4" width="74" height="42" fill="none" stroke="var(--ink)" stroke-width="3"/><rect x="5" y="6" width="35" height="38" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/><rect x="11" y="8" width="35" height="34" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5" opacity=".9"/><rect x="41" y="6" width="34" height="38" fill="var(--air)" opacity=".35"/><path d="M48 25h20m-5-5 5 5-5 5" stroke="var(--air)" stroke-width="2.5" fill="none"/></svg>`;
+const WTYPES = [['c2','Corrediza de 2 hojas · abre 50 %',.5],['c3','Corrediza de 3 hojas, 1 móvil · abre 33 %',1/3],['c4','Corrediza de 4 hojas, 2 móviles · abre 50 %',.5],['bat','Batiente o proyectante · abre la hoja completa',1],['libre','Vano libre, sin carpintería · 100 %',1],['fija','Ventana fija · 0 %',0]];
+let WROWS = [];
+function bindCalc(s){
+  WROWS = [{k:'c2',w:'',h:'',n:1}];
+  const num = v=>{ const x=parseFloat(String(v).replace(',','.')); return isNaN(x)?0:x; };
+  const area = r=>num(r.w)*num(r.h)*Math.max(0,Math.round(num(r.n)))*(WTYPES.find(t=>t[0]===r.k)||[0,0,0])[2];
+  const total = ()=>WROWS.reduce((a,r)=>a+area(r),0);
+  const draw = ()=>{
+    $('#wrows').innerHTML = WROWS.map((r,i)=>`<div class="wrow" data-i="${i}">
+      <label class="wtype">Tipo<select data-f="k">${WTYPES.map(t=>`<option value="${t[0]}" ${t[0]===r.k?'selected':''}>${t[1]}</option>`).join('')}</select></label>
+      <label>Ancho m<input data-f="w" inputmode="decimal" value="${r.w}" placeholder="2,0"></label>
+      <label>Alto m<input data-f="h" inputmode="decimal" value="${r.h}" placeholder="1,2"></label>
+      <label>Cant.<input data-f="n" inputmode="numeric" value="${r.n}"></label>
+      <span class="wres num">${f2(area(r))} m²</span>
+      <button type="button" class="wdel" aria-label="Quitar vano" ${WROWS.length<2?'hidden':''}>×</button></div>`).join('');
+    $('#wUse').textContent = `Usar ${f2(total())} m²`;
+  };
+  draw();
+  $('#wrows').oninput = e=>{ const row=e.target.closest('.wrow'), f=e.target.dataset.f; if(!row||!f) return; const r=WROWS[+row.dataset.i]; r[f]=e.target.value;
+    row.querySelector('.wres').textContent=`${f2(area(r))} m²`; $('#wUse').textContent=`Usar ${f2(total())} m²`; };
+  $('#wrows').onchange = $('#wrows').oninput;
+  $('#wrows').onclick = e=>{ const d=e.target.closest('.wdel'); if(!d) return; WROWS.splice(+d.closest('.wrow').dataset.i,1); draw(); };
+  $('#wAdd').onclick = ()=>{ WROWS.push({k:'c2',w:'',h:'',n:1}); draw(); };
+  $('#wUse').onclick = ()=>{ const t=Math.round(total()*100)/100; if(!t){ toast('Escribe el ancho y el alto de al menos un vano que abra.'); return; }
+    $('#vIn').value=String(t).replace('.',','); setVal(s.id,t); syncDetail(); syncRow(s.id); toast(`Se registraron ${f2(t)} m² en el diseño.`); };
+}
+
+/* ---------- estado de filtros ---------- */
+const F = Object.assign({t:'',n:'',r:'',st:'',q:'',sort:'nivel'}, loadPref('filtros',{}));
+let SEL = loadPref('sel', null);
+
+/* ---------- mapa esquemático del estadio ---------- */
+const ROT=-22; // eje mayor girado 22° antihorario respecto al norte real (NNO–SSE)
+function windArrows(cx,cy,d1,d2,label,lx,ly){
+  // brisa dominante desde el ENE (rumbo 67,5°), dibujada con el norte real arriba
+  const b=67.5*Math.PI/180, ux=Math.sin(b), uy=-Math.cos(b), px=-uy, py=ux;
+  let s='';
+  for(const k of [-30,0,30]){
+    const x1=cx+ux*d1+px*k, y1=cy+uy*d1+py*k, x2=cx+ux*d2+px*k, y2=cy+uy*d2+py*k;
+    const hx=x2-ux*8, hy=y2-uy*8;
+    s+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${hx.toFixed(1)}" y2="${hy.toFixed(1)}" stroke="var(--air)" stroke-width="2.5" stroke-linecap="round"/>`;
+    s+=`<path d="M${x2.toFixed(1)},${y2.toFixed(1)} L${(hx+px*5).toFixed(1)},${(hy+py*5).toFixed(1)} L${(hx-px*5).toFixed(1)},${(hy-py*5).toFixed(1)} Z" fill="var(--air)"/>`;
+  }
+  return s+`<text x="${lx}" y="${ly}" text-anchor="end" font-size="10" font-weight="700" fill="var(--air)">${label}</text>`;
+}
+function northArrow(x,y){
+  return `<path d="M${x},${y-9} l6,16 l-6,-4 l-6,4 z" fill="var(--ink)"/><text x="${x}" y="${y+20}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--ink)">N</text>`;
+}
+function stadiumSVG(opts){
+  const {w=300,h=250,values=null,sel='',big=false} = opts;
+  const cx=big?w/2-18:w/2-14, cy=big?h/2+12:h/2+8, rx=big?80:72, ry=big?104:94, sw=big?28:24; // eje largo (ry) = eje N–S del estadio
+  // P: punto sobre la elipse ya girada (para los textos, que se mantienen derechos)
+  const P=(a,rxx,ryy)=>{ const t=a*Math.PI/180, r=ROT*Math.PI/180, x=rxx*Math.cos(t), y=ryy*Math.sin(t);
+    return [cx+x*Math.cos(r)-y*Math.sin(r), cy+x*Math.sin(r)+y*Math.cos(r)]; };
+  const Q=(a)=>[cx+rx*Math.cos(a*Math.PI/180), cy+ry*Math.sin(a*Math.PI/180)];
+  const seg={ORI:[-38,38],SUR:[52,128],OCC:[142,218],NOR:[232,308]};
+  const max = values ? Math.max(...Object.values(values)) : 1;
+  let s=`<svg viewBox="0 0 ${w} ${h}" role="group" aria-label="Esquema del estadio con el norte real arriba: elige una tribuna">`;
+  s+=`<g transform="rotate(${ROT} ${cx} ${cy})">`;
+  // cancha 68 × 105 m: lado largo sobre el eje NNO–SSE, arcos hacia las tribunas Norte y Sur
+  const fw=big?56:50, fh=fw*105/68;
+  s+=`<rect x="${cx-fw/2}" y="${cy-fh/2}" width="${fw}" height="${fh}" rx="3" fill="var(--surface-2)" stroke="var(--line)"/>`;
+  s+=`<line x1="${cx-fw/2}" y1="${cy}" x2="${cx+fw/2}" y2="${cy}" stroke="var(--line)"/><circle cx="${cx}" cy="${cy}" r="${fw*9.15/68}" fill="none" stroke="var(--line)"/>`;
+  s+=`<rect x="${cx-fw*20.16/68}" y="${cy-fh/2}" width="${fw*40.32/68}" height="${fh*16.5/105}" fill="none" stroke="var(--line)"/><rect x="${cx-fw*20.16/68}" y="${cy+fh/2-fh*16.5/105}" width="${fw*40.32/68}" height="${fh*16.5/105}" fill="none" stroke="var(--line)"/>`;
+  s+=`<line x1="${cx}" y1="${cy-ry-24}" x2="${cx}" y2="${cy+ry+24}" stroke="var(--muted)" stroke-dasharray="3 4" opacity=".6"/>`;
+  for (const t of TORDER){
+    const [a1,a2]=seg[t]; const p1=Q(a1), p2=Q(a2);
+    const op = values ? (0.25 + 0.75*values[t]/max) : 0.55;
+    const isSel = sel===t;
+    const d=`M${p1[0].toFixed(1)},${p1[1].toFixed(1)} A${rx},${ry} 0 0 1 ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+    s+=`<path class="trib-arc" data-t="${t}" tabindex="0" role="button" aria-label="Tribuna ${TRIB[t].name}" aria-pressed="${isSel}" d="${d}" fill="none" stroke="var(--accent)" stroke-opacity="${isSel?1:op.toFixed(2)}" stroke-width="${sw}" style="cursor:pointer"/>`;
+    if (isSel) s+=`<path d="${d}" fill="none" stroke="var(--ink)" stroke-width="${sw+6}" style="pointer-events:none" opacity=".18"/>`;
+  }
+  s+=`</g>`;
+  s+=`<text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="8.5" fill="var(--muted)" letter-spacing="1.2" style="pointer-events:none">CANCHA</text>`;
+  for (const t of TORDER){
+    const [a1,a2]=seg[t], mid=(a1+a2)/2, lp=P(mid,rx,ry);
+    s+=`<text x="${lp[0].toFixed(1)}" y="${(lp[1]+4).toFixed(1)}" text-anchor="middle" font-size="${big?12:11}" font-weight="700" fill="var(--ink)" style="pointer-events:none;font-family:var(--f-display);letter-spacing:.06em">${t}</text>`;
+    if (big && values){
+      const side=(t==='ORI'||t==='OCC'), op2=t==='ORI'?P(34,rx+40,ry+34):P(mid,rx+(side?50:34),ry+(side?34:30));
+      s+=`<text x="${op2[0].toFixed(1)}" y="${op2[1].toFixed(1)}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)" class="num">${f0(values[t])} m²</text>`;
+      s+=`<text x="${op2[0].toFixed(1)}" y="${(op2[1]+13).toFixed(1)}" text-anchor="middle" font-size="10" fill="var(--muted)">ef. ${String(TRIB[t].ef).replace('.',',')}</text>`;
+    }
+  }
+  s+= big ? windArrows(cx,cy,215,172,'BRISA ENE',w-4,18) : windArrows(cx,cy,158,122,'BRISA ENE',w-4,16);
+  s+=northArrow(18,22);
+  s+=`</svg>`;
+  return s;
+}
+function bindArcs(root, fn){
+  root.querySelectorAll('.trib-arc').forEach(el=>{
+    el.addEventListener('click',()=>fn(el.dataset.t));
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fn(el.dataset.t);} });
+  });
+}
+
+/* ---------- chips de filtros ---------- */
+function chip(group,val,label,dot){
+  const on = F[group]===val;
+  return `<button class="chip" data-g="${group}" data-v="${val}" aria-pressed="${on}">${dot?`<span class="dot" style="background:var(${dot})"></span>`:''}${esc(label)}</button>`;
+}
+function renderFilters(){
+  $('#fTrib').innerHTML = chip('t','','Todas') + TORDER.map(t=>chip('t',t,TRIB[t].name)).join('');
+  $('#fNiv').innerHTML = chip('n','','Todos') + NORDER.map(n=>chip('n',n,n==='N-1'?'Sótano':NSHORT[n])).join('');
+  $('#fReg').innerHTML = chip('r','','Todos') + Object.keys(REG).map(r=>chip('r',r,REG[r].short,REG[r].c)).join('');
+  $('#fSt').innerHTML = chip('st','','Todos') + ['pending','ok','partial','fail','mec'].map(s=>chip('st',s,ST[s])).join('');
+  $('#miniMap').innerHTML = stadiumSVG({sel:F.t});
+  bindArcs($('#miniMap'), t=>{ F.t = F.t===t?'':t; update(); });
+}
+document.addEventListener('click',e=>{
+  const c = e.target.closest('.chip[data-g]'); if(!c) return;
+  F[c.dataset.g] = (F[c.dataset.g]===c.dataset.v && c.dataset.v!=='') ? '' : c.dataset.v;
+  update();
+});
+
+/* ---------- lista ---------- */
+function norm(s){ return s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase(); }
+SP.forEach(s=>{ s._q = norm(s.s+' '+s.ty+' '+TRIB[s.t].name+' '+NIV[s.n]+' '+REG[s.r].name); });
+function filtered(){
+  const words = norm(F.q).split(/\s+/).filter(Boolean);
+  return SP.filter(s=>
+    (!F.t||s.t===F.t)&&(!F.n||s.n===F.n)&&(!F.r||s.r===F.r)&&
+    (!F.st||evaluate(s).st===F.st)&&words.every(w=>s._q.includes(w)));
+}
+function renderList(){
+  let L = filtered();
+  const ctx=[]; if(F.t) ctx.push('Tribuna '+TRIB[F.t].name); if(F.n) ctx.push(NIV[F.n]); if(F.r) ctx.push(REG[F.r].name); if(F.st) ctx.push(ST[F.st]);
+  $('#listCtx').textContent = ctx.length?ctx.join(' · '):'Todo el estadio';
+  $('#listTitle').textContent = L.length===1?'1 espacio':f0(L.length)+' espacios';
+  const tot = L.reduce((a,s)=>a+s.at,0), area=L.reduce((a,s)=>a+s.a,0);
+  $('#listSum').textContent = L.length? `${f1(tot)} m² de abertura requerida · ${f0(area)} m² de piso` : '';
+  if(!L.length){ $('#rows').innerHTML = `<li class="empty">Ningún espacio coincide con estos filtros.<br><button class="linkbtn" onclick="document.getElementById('clearF').click()">Quitar filtros</button></li>`; return; }
+  const ti = t=>TORDER.indexOf(t), ni=n=>NORDER.indexOf(n);
+  if (F.sort==='at') L.sort((a,b)=>b.at-a.at);
+  else if (F.sort==='nombre') L.sort((a,b)=>a.s.localeCompare(b.s,'es'));
+  else L.sort((a,b)=>ti(a.t)-ti(b.t)||ni(a.n)-ni(b.n)||a.id-b.id);
+  let html='<li class="listcols" aria-hidden="true"><span></span><span>Espacio</span><span>Requerida</span><span>Diseño</span><span>Resultado</span></li>', last='';
+  for (const s of L){
+    if (F.sort==='nivel'){
+      const g=s.t+s.n;
+      if(g!==last){ const gl=L.filter(x=>x.t===s.t&&x.n===s.n); html+=`<li class="grouphdr"><span>${TRIB[s.t].name} · ${NIV[s.n]}</span><span class="num">${gl.length} esp. · ${f1(gl.reduce((a,x)=>a+x.at,0))} m²</span></li>`; last=g; }
+    }
+    const rv=REV[s.id];
+    html+=`<li class="row" data-id="${s.id}" tabindex="0" aria-current="${SEL===s.id}">
+      <span class="bar" style="background:var(${REG[s.r].c})"></span>
+      <div class="nmw" style="min-width:0"><div class="nm">${esc(s.s)}</div><div class="sub">${F.sort!=='nivel'?TRIB[s.t].name+' · '+NIV[s.n]+' · ':''}${esc(s.ty)}<span class="reqm"> · requiere <b class="num" style="color:var(--ink)">${f2(s.at)} m²</b></span></div></div>
+      <div class="at num">${f2(s.at)} m²<small>requerida</small></div>
+      <label class="qv num"><input type="text" inputmode="decimal" placeholder="—" value="${rv&&rv.v!==undefined?String(rv.v).replace('.',','):''}" aria-label="Abertura del diseño para ${esc(s.s)} en m²" data-qid="${s.id}">m²</label>
+      <div class="res num">${resHTML(s)}</div>
+    </li>`;
+  }
+  $('#rows').innerHTML = html;
+}
+$('#rows').addEventListener('click',e=>{ if(e.target.closest('.qv')) return; const r=e.target.closest('.row'); if(r) select(+r.dataset.id); });
+$('#rows').addEventListener('input',e=>{ const i=e.target.closest('[data-qid]'); if(!i) return; const id=+i.dataset.qid;
+  setVal(id,i.value); syncRow(id); if(SEL===id) syncDetail(); });
+$('#rows').addEventListener('focusin',e=>{ const i=e.target.closest('[data-qid]'); if(i && SEL!==+i.dataset.qid && !window.matchMedia('(max-width:1180px)').matches){ SEL=+i.dataset.qid; savePref('sel',SEL);
+  document.querySelectorAll('.row').forEach(r=>r.setAttribute('aria-current', +r.dataset.id===SEL)); renderDetail(); } });
+$('#rows').addEventListener('keydown',e=>{ const i=e.target.closest('[data-qid]'); if(!i||(e.key!=='Enter'&&e.key!=='ArrowDown'&&e.key!=='ArrowUp')) return;
+  e.preventDefault(); const all=[...document.querySelectorAll('[data-qid]')], k=all.indexOf(i)+(e.key==='ArrowUp'?-1:1);
+  if(all[k]){ all[k].focus(); all[k].select(); } });
+$('#rows').addEventListener('keydown',e=>{ if(e.target.closest('.qv')) return; const r=e.target.closest('.row'); if(r&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); select(+r.dataset.id);} });
+
+/* ---------- ficha del espacio ---------- */
+function select(id){
+  SEL=id; savePref('sel',id);
+  document.querySelectorAll('.row').forEach(r=>r.setAttribute('aria-current', +r.dataset.id===id));
+  renderDetail(); $('#detail').classList.add('open');
+  if (window.matchMedia('(max-width:1180px)').matches) $('#detail').scrollTop=0;
+}
+function renderDetail(){
+  const el=$('#detail');
+  const s = SP.find(x=>x.id===SEL);
+  if(!s){
+    el.innerHTML = `<div class="d-empty"><div class="eyebrow">Ficha del espacio</div><h2>Elige un espacio de la lista</h2>
+      <p style="margin:0">Aquí verás cuánta abertura necesita, qué hacer según su tipo y podrás registrar lo que tiene el diseño.</p>
+      <ol><li>Filtra por tribuna y nivel, o busca por nombre.</li><li>Haz clic en el espacio.</li><li>Escribe el área libre de abertura del diseño.</li></ol>
+      <button class="btn primary" id="tryOne" style="align-self:flex-start">Ver un ejemplo: Baño Hombres OCC</button></div>`;
+    const ex = SP.find(x=>/^Baños Hombres OCC$/.test(x.s)) || SP[0];
+    $('#tryOne').onclick=()=>select(ex.id);
+    return;
+  }
+  const ae = s.at/1.7, as = s.at-ae, vol=s.a*s.h, idx=s.at/s.a;
+  const ev = evaluate(s); const r=ev.r; const T=TRIB[s.t]; const R=REG[s.r];
+  const vanoTxt = s.v==='Rejilla' ? 'rejilla (eficiencia 0,35)' : 'ventana proyectante (eficiencia 0,50)';
+  const efTxt = s.ef===0.2 ? 'Se asumió recinto interior que ventila a través de otro espacio (eficiencia 0,2). Es un supuesto conservador que debe verificarse en planos.' : `${T.pos} · fachada ${T.fach} · eficiencia ${String(s.ef).replace('.',',')}. ${T.tip}`;
+  const notes=[];
+  if (s.n==='N1') notes.push('En el nivel 1 algunos espacios están en ajuste de diseño y algunos se calcularon agrupados: pueden cambiar. Los que están dentro de otros espacios requieren revisión específica.');
+  if (s.n==='N-1') notes.push('Sótano: es probable que no tenga fachada. En ese caso, inyección y extracción mecánica; duchas y jacuzzis con extracción por la carga de vapor.');
+  const fill = ev.ratio===null?0:Math.min(ev.ratio,1.5)/1.5*100;
+  const fillC = {ok:'var(--ok)',partial:'var(--warn)',fail:'var(--bad)'}[ev.st]||'var(--muted)';
+  const scaleMax = Math.max(idx, 1/9)*1.25;
+  el.innerHTML = `<div class="d-in">
+    <button class="btn d-close" id="dClose">← Volver a la lista</button>
+    <div class="d-title">
+      <div class="eyebrow">Tribuna ${T.name} · ${NIV[s.n]}</div>
+      <h2>${esc(s.s)}</h2>
+      <div class="d-meta"><span class="tag" style="box-shadow:inset 4px 0 0 var(${R.c})">${s.r} · ${R.name}</span><span class="tag">${esc(s.ty)}</span><span class="tag num">${f0(s.a)} m² de piso</span></div>
+    </div>
+    <div class="verify" style="background:transparent;border:0;padding:0">
+      <div class="cmp num">
+        <div class="req"><span class="k">Requerida</span><span class="v">${f2(s.at)}<small>m²</small></span><span class="sub2">entrada ${f2(ae)} · salida ${f2(as)}</span></div>
+        <div class="dis"><label class="k" for="vIn">Tiene el diseño</label><input id="vIn" type="text" inputmode="decimal" placeholder="0,00" value="${ev.hasV?String(r.v).replace('.',','):''}" autocomplete="off"><span class="sub2">m² que realmente abren</span></div>
+        <div class="gapc" id="gapBox"></div>
+      </div>
+      <div class="open-note">${OPEN_SVG}<span><b>Cuenta solo lo que abre.</b> Una corrediza de 2 hojas de 2,0 × 1,2 m (2,4 m²) aporta 1,2 m², porque una hoja siempre queda cerrada. Una ventana fija no aporta.</span></div>
+      <details class="wcalc" id="wcalc"><summary>Calcular desde las ventanas del plano</summary>
+        <div id="wrows"></div>
+        <div class="wtot"><button type="button" class="btn" id="wAdd">+ Agregar vano</button><button type="button" class="btn primary" id="wUse">Usar 0,00 m²</button></div>
+        <p class="howto" style="margin:8px 0 0">Mide la ventana completa (ancho × alto) y elige su tipo: la herramienta toma solo la parte que abre.</p>
+      </details>
+      <div id="vRes"></div>
+      <div class="locsel">
+        <span class="eyebrow">¿Hacia dónde abre el vano?</span>
+        <div class="chips" role="group" aria-label="Hacia dónde abre el vano">${Object.entries(LOC).map(([k,l])=>`<button type="button" class="chip" data-loc="${k}" aria-pressed="${locOf(r)===k}">${l}</button>`).join('')}</div>
+        <span class="howto">${s.ef===0.2?'El cálculo supuso que este recinto ventila a través de otro espacio (vano interior).':'Fachada, cubierta o espacio abierto permiten la ventilación natural. Elige “Sin vano al exterior” si no hay ninguna de las tres.'}</span>
+      </div>
+      <div><label for="noteIn" class="eyebrow">Observaciones</label>
+      <textarea id="noteIn" placeholder="Ej: ventana corrediza hacia el anillo de circulación, plano A-104">${esc(r.note||'')}</textarea></div>
+      <p class="howto" style="margin:0">Ideal: un vano de entrada y otro de salida en fachadas distintas. Si no, dos vanos en la misma fachada (uno bajo y otro alto); en último caso, un solo vano. Vano supuesto: ${vanoTxt}.</p>
+    </div>
+    <div class="callout" style="--c:var(${R.c})"><h3>Qué hacer con este tipo de espacio</h3><p>${R.act}</p><p><button class="linkbtn" data-est="${s.r}">Ver estrategias gráficas para ${s.r} →</button></p></div>
+    <div class="callout" style="--c:var(--air)"><h3>Su posición frente a la brisa</h3><p>${efTxt}</p></div>
+    ${notes.map(n=>`<div class="callout" style="--c:var(--accent)"><h3>Atención</h3><p>${n}</p></div>`).join('')}
+
+    <div>
+      <div class="sec-t">Datos del cálculo</div>
+      <dl class="facts num">
+        <div><dt>Área de piso</dt><dd>${f0(s.a)} m²</dd></div>
+        <div><dt>Altura libre</dt><dd>${f1(s.h)} m</dd></div>
+        <div><dt>Volumen</dt><dd>${f0(vol)} m³</dd></div>
+        <div><dt>Renovaciones</dt><dd>${f0(s.rph)} por hora</dd></div>
+        <div><dt>Caudal</dt><dd>${f0(s.q)} m³/h</dd></div>
+        <div><dt>Ef. ubicación</dt><dd>${String(s.ef).replace('.',',')}</dd></div>
+        <div><dt>Tipo de vano</dt><dd>${s.v}</dd></div>
+        <div><dt>Índice</dt><dd>${pct(idx)} del piso</dd></div>
+      </dl>
+      <div class="idx" style="margin-top:12px">
+        <span>Índice de abertura frente a las relaciones de referencia</span>
+        <div class="idxbar"><i style="width:${Math.min(idx/scaleMax,1)*100}%"></i>
+          <s style="left:${(1/15)/scaleMax*100}%"></s><s style="left:${(1/12)/scaleMax*100}%"></s><s style="left:${(1/9)/scaleMax*100}%"></s></div>
+        <span class="howto">Marcas en 1/15, 1/12 y 1/9 del área de piso (6,7 %, 8,3 % y 11,1 %).${idx>1/9?' Este espacio supera 1/9: difícil de lograr solo con vanos.':idx<1/15?' Por debajo de 1/15: alcanzable con vanos convencionales si dan al exterior.':''}</span>
+      </div>
+    </div>
+    <div class="btnrow">
+      <button class="btn" data-doc="ppt" data-pg="${s.pp}">Ver lámina ${s.pp} de la presentación</button>
+      <button class="btn" data-doc="inf" data-pg="${s.p}">Ver página ${s.p} del informe</button>
+    </div>
+  </div>`;
+  $('#vIn').addEventListener('input',e=>{ setVal(s.id,e.target.value); syncDetail(); syncRow(s.id); });
+  document.querySelectorAll('[data-loc]').forEach(btn=>btn.addEventListener('click',()=>{
+    const rec=Object.assign({},REV[s.id]||{}); delete rec.nf;
+    if(rec.loc===btn.dataset.loc) delete rec.loc; else rec.loc=btn.dataset.loc;
+    delete rec.ts; if(Object.keys(rec).length){ rec.ts=Date.now(); REV[s.id]=rec; } else delete REV[s.id];
+    saveRev(); document.querySelectorAll('[data-loc]').forEach(x=>x.setAttribute('aria-pressed', x.dataset.loc===rec.loc)); syncDetail(); syncRow(s.id); }));
+  $('#noteIn').addEventListener('input',e=>{ const rec=Object.assign({},REV[s.id]||{}); if(e.target.value.trim()) rec.note=e.target.value; else delete rec.note; rec.ts=Date.now(); REV[s.id]=rec; saveRev(); });
+  syncDetail(); bindCalc(s);
+  $('#dClose').onclick=()=>{ el.classList.remove('open'); const row=document.querySelector(`.row[data-id="${s.id}"]`); if(row) row.focus(); };
+}
+function syncDetail(){
+  const s=SP.find(x=>x.id===SEL); if(!s||!$('#gapBox')) return;
+  const g=gapInfo(s), ev=g.ev;
+  const box=$('#gapBox'); box.className='gapc s-'+g.cls;
+  const unit=(g.big!=='—'&&g.big!=='Revisar')?'<small>m²</small>':'';
+  box.innerHTML=`<span class="k">${g.cls==='ok'?'Cumple':g.cls==='mec'?'Estado':'Le falta'}</span><span class="v gap-${g.cls}">${g.big}${unit}</span><span class="sub2">${g.sub}</span>`;
+  const inp=$('#vIn'); if(document.activeElement!==inp){ inp.value=ev.hasV?String(ev.r.v).replace('.',','):''; }
+  const fill=ev.ratio===null?0:Math.min(ev.ratio,1.5)/1.5*100, fillC={ok:'var(--ok)',partial:'var(--warn)',fail:'var(--bad)'}[ev.st]||'var(--muted)';
+  const meter=(ev.hasV&&locOf(ev.r)!=='ninguno')?`<div class="meter" aria-hidden="true"><div class="fill" style="width:${fill}%;background:${fillC}"></div><div class="mk" style="left:${50/1.5}%"><span>50 %</span></div><div class="mk" style="left:${100/1.5}%"><span>100 %</span></div></div>`:'';
+  $('#vRes').innerHTML=`${meter}<div class="verdict v-${ev.st}"><b>${ev.title}</b>${ev.txt}</div>`;
+}
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-est]'); if(b){ $('#detail').classList.remove('open'); EST.open(b.dataset.est); } });
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-doc]'); if(b){ openDoc(b.dataset.doc,+b.dataset.pg); } });
+
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>t.hidden=true,2600); }
+/* ---------- PDF de la revisión ---------- */
+let DL = null;
+if (window.claude && window.claude.use) window.claude.use('downloads').then(d=>{ DL=d; }).catch(()=>{});
+function buildPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
+  const W = doc.internal.pageSize.getWidth();
+  const list = SP.filter(s=>REV[s.id]);
+  const ti=t=>TORDER.indexOf(t), ni=n=>NORDER.indexOf(n);
+  list.sort((a,b)=>ti(a.t)-ti(b.t)||ni(a.n)-ni(b.n)||a.id-b.id);
+  const cnt={ok:0,partial:0,fail:0,mec:0,pending:0,na:0}; list.forEach(s=>cnt[evaluate(s).st]++);
+  const now=new Date();
+  doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(24,33,29);
+  doc.text('Verificación de áreas de ventilación natural', 14, 16);
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(88,99,93);
+  doc.text('Estadio Atanasio Girardot · Medellín · Estudio bioclimático del 07-10-2026', 14, 22);
+  doc.text('Generado el '+now.toLocaleString('es-CO',{dateStyle:'long',timeStyle:'short'}), W-14, 16, {align:'right'});
+  doc.setTextColor(24,33,29); doc.setFontSize(10.5);
+  const sum=[`${list.length} espacios revisados de ${SP.length}`, `Cumple: ${cnt.ok}`, `Parcial: ${cnt.partial}`, `No cumple: ${cnt.fail}`, `Revisión técnica: ${cnt.mec}`];
+  if(cnt.pending+cnt.na) sum.push(`Solo con observaciones: ${cnt.pending+cnt.na}`);
+  doc.text(sum.join('   ·   '), 14, 30);
+  const COL={ok:[36,128,79],partial:[168,107,0],fail:[184,50,42],mec:[102,80,160],pending:[88,99,93],na:[88,99,93]};
+  const body=list.map(s=>{ const ev=evaluate(s), r=ev.r, d=ev.hasV?r.v-s.at:null;
+    return [TRIB[s.t].name, NIV[s.n], s.s, s.r, f2(s.at), ev.hasV?f2(r.v):'-', d===null?'-':(d>=0?'+'+f2(d):'-'+f2(-d)), ev.ratio===null?'-':pct(ev.ratio), locOf(r)?LOC[locOf(r)]:'-', ST[ev.st], r.note||''];
+  });
+  doc.autoTable({
+    startY: 35,
+    head: [['Tribuna','Nivel','Espacio','Rég.','Requerida m²','Diseño m²','Diferencia m²','%','Vano hacia','Estado','Observaciones']],
+    body,
+    styles:{font:'helvetica',fontSize:8,cellPadding:1.6,lineColor:[211,216,208],lineWidth:0.1,textColor:[24,33,29],valign:'middle'},
+    headStyles:{fillColor:[24,33,29],textColor:255,fontStyle:'bold'},
+    alternateRowStyles:{fillColor:[241,242,238]},
+    columnStyles:{0:{cellWidth:20},1:{cellWidth:16},2:{cellWidth:48},3:{cellWidth:10,halign:'center'},4:{cellWidth:20,halign:'right'},5:{cellWidth:18,halign:'right'},6:{cellWidth:21,halign:'right'},7:{cellWidth:14,halign:'right'},8:{cellWidth:26},9:{cellWidth:24,fontStyle:'bold'},10:{cellWidth:'auto'}},
+    didParseCell:(h)=>{ if(h.section==='body' && (h.column.index===9||h.column.index===6)){ const st=evaluate(list[h.row.index]).st; h.cell.styles.textColor=COL[st]; } },
+    didDrawPage:()=>{ const H=doc.internal.pageSize.getHeight(); doc.setFontSize(7.5); doc.setTextColor(88,99,93);
+      doc.text('Área del diseño = área que realmente abre (ej.: corrediza de 2 hojas = 50 % de la ventana; fija = 0).', 14, H-12);
+      doc.text('Criterio: 100 % o más cumple · 50–100 % natural con extracción de apoyo · menos de 50 % mecánica principal (informe, cap. 7). Recomendaciones orientativas: la solución final la define cada especialidad.', 14, H-8);
+      doc.text('Pág. '+doc.internal.getNumberOfPages(), W-14, H-8, {align:'right'}); }
+  });
+  return doc;
+}
+const stamp=()=>{ const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+async function saveFile(name, blob, label){
+  if(DL){
+    try{ await DL.save({filename:name,data:blob}); toast(`${label} guardado.`); }
+    catch(e){ if(e&&e.code==='declined') toast(`No se guardó el ${label}.`); else if(e&&e.code==='rate_limited') toast('Ya hay una descarga pendiente de confirmar.'); else toast(`No se pudo guardar el ${label} en esta vista.`); }
+    return;
+  }
+  if(window.claude){ toast('Guardar archivos no está disponible en esta vista.'); return; }
+  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000);
+  toast(`${label} descargado.`);
+}
+$('#savePdf').onclick=async()=>{
+  if(!Object.keys(REV).length){ toast('Aún no has revisado ningún espacio.'); return; }
+  if(!window.jspdf){ toast('No se pudo cargar el generador de PDF. Revisa la conexión a internet.'); return; }
+  const doc=buildPDF(); const d=new Date();
+  const name=`revision-ventilacion-${stamp()}.pdf`;
+  const blob=doc.output('blob');
+  saveFile(name, blob, 'PDF');
+};
+/* ---------- JSON: guardar y cargar la revisión ---------- */
+const JSON_APP='ventilacion-atanasio-girardot';
+$('#saveJson').onclick=()=>{
+  const ids=Object.keys(REV); if(!ids.length){ toast('Aún no has revisado ningún espacio.'); return; }
+  const espacios=SP.filter(s=>REV[s.id]).map(s=>{ const r=REV[s.id], ev=evaluate(s);
+    return {id:s.id, tribuna:TRIB[s.t].name, nivel:NIV[s.n], espacio:s.s, regimen:s.r, requerida_m2:s.at,
+      diseno_m2:r.v!==undefined?r.v:null, vano_hacia:locOf(r)||null, observaciones:r.note||'', estado:ST[ev.st], editado:r.ts?new Date(r.ts).toISOString():null}; });
+  const data={app:JSON_APP, version:1, estudio:'Estadio Atanasio Girardot · Verificación de áreas de ventilación natural · 07-10-2026',
+    guardado:new Date().toISOString(), total_espacios:espacios.length, espacios};
+  saveFile(`revision-ventilacion-${stamp()}.json`, new Blob([JSON.stringify(data,null,2)],{type:'application/json'}), '.json');
+};
+let PENDING=null;
+$('#loadJson').onclick=()=>{ $('#jsonIn').value=''; $('#jsonIn').click(); };
+$('#jsonIn').onchange=async e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  let data; try{ data=JSON.parse(await f.text()); }catch(err){ toast('El archivo no es un .json válido.'); return; }
+  if(!data||data.app!==JSON_APP||!Array.isArray(data.espacios)){ toast('Este .json no es una revisión de esta herramienta.'); return; }
+  const rec={};
+  for(const x of data.espacios){
+    if(!SP.find(s=>s.id===x.id)) continue;
+    const r={};
+    if(typeof x.diseno_m2==='number' && x.diseno_m2>=0) r.v=x.diseno_m2;
+    if(x.vano_hacia && LOC[x.vano_hacia]) r.loc=x.vano_hacia;
+    if(x.observaciones) r.note=String(x.observaciones);
+    if(Object.keys(r).length){ r.ts=x.editado?Date.parse(x.editado)||Date.now():Date.now(); rec[x.id]=r; }
+  }
+  const n=Object.keys(rec).length; if(!n){ toast('El archivo no trae espacios revisados.'); return; }
+  if(!Object.keys(REV).length){ REV=rec; saveRev(); update(); toast(`Se cargaron ${n} espacios. Puedes seguir trabajando.`); return; }
+  PENDING=rec; $('#loadMsg').textContent=`El archivo “${f.name}” trae ${n} espacios revisados y tú ya tienes ${Object.keys(REV).length}. ¿Qué quieres hacer?`; $('#loadBox').hidden=false;
+};
+$('#loadMerge').onclick=()=>{ if(!PENDING) return; Object.assign(REV,PENDING); const n=Object.keys(PENDING).length; PENDING=null; saveRev(); $('#loadBox').hidden=true; update(); toast(`Se combinaron ${n} espacios (los del archivo reemplazan a los tuyos en los mismos espacios).`); };
+$('#loadReplace').onclick=()=>{ if(!PENDING) return; REV=PENDING; const n=Object.keys(PENDING).length; PENDING=null; saveRev(); $('#loadBox').hidden=true; update(); toast(`Se cargaron ${n} espacios.`); };
+$('#loadCancel').onclick=()=>{ PENDING=null; $('#loadBox').hidden=true; };
+$('#clearAll').onclick=()=>{ $('#clearConfirm').hidden=false; };
+$('#clearNo').onclick=()=>{ $('#clearConfirm').hidden=true; };
+$('#clearYes').onclick=()=>{ REV={}; saveRev(); $('#clearConfirm').hidden=true; update(); toast('Revisión borrada.'); };
+
+/* ---------- otros controles ---------- */
+let qT; $('#q').addEventListener('input',e=>{ clearTimeout(qT); qT=setTimeout(()=>{ F.q=e.target.value; update(); },120); });
+$('#sort').addEventListener('change',e=>{ F.sort=e.target.value; update(); });
+$('#clearF').onclick=()=>{ Object.assign(F,{t:'',n:'',r:'',st:'',q:''}); $('#q').value=''; update(); };
+$('#ftoggle').onclick=()=>{ const s=$('#side'); s.classList.toggle('collapsed'); $('#ftoggle').setAttribute('aria-expanded', !s.classList.contains('collapsed')); };
+
+function update(){ savePref('filtros',F); renderFilters(); const nAct=['t','n','r','st','q'].filter(k=>F[k]).length; $('#ftoggle').textContent = nAct?`Filtros (${nAct} activos)`:'Filtros'; renderList(); renderDetail(); if(!$('#view-resumen').hidden) renderSummary(); }
+
+/* ---------- Resumen ---------- */
+function renderSummary(){
+  const sum=(arr,k='at')=>arr.reduce((a,s)=>a+s[k],0);
+  const tot=sum(SP), area=sum(SP,'a');
+  const byT={}; TORDER.forEach(t=>byT[t]=sum(SP.filter(s=>s.t===t)));
+  $('#kpis').innerHTML = [
+    [f0(SP.length),'espacios en 8 niveles y 4 tribunas'],
+    [f0(tot)+' m²','de abertura libre requerida en total'],
+    [pct(tot/area),'índice medio sobre el área de piso'],
+    ['1,0 m/s','viento de diseño (límite inferior medido en la Torre SIATA)']
+  ].map(([v,l])=>`<div class="panel kpi"><div class="v num">${v}</div><div class="l">${l}</div></div>`).join('');
+  $('#bigMap').innerHTML = stadiumSVG({w:380,h:300,values:byT,big:true});
+  bindArcs($('#bigMap'), t=>goFilter({t}));
+  $('#tribList').innerHTML = TORDER.map(t=>{
+    const L=SP.filter(s=>s.t===t), closed=L.filter(s=>s.r!=='R1');
+    return `<button class="trib" data-t="${t}"><h3>${TRIB[t].name}</h3><div class="m num">${TRIB[t].pos} · ${f1(byT[t])} m² (${pct(byT[t]/tot)})<br>${L.length} espacios · índice recintos cerrados ${pct(sum(closed)/sum(closed,'a'))}</div></button>`;
+  }).join('');
+  $('#tribList').querySelectorAll('.trib').forEach(b=>b.onclick=()=>goFilter({t:b.dataset.t}));
+  // matriz
+  let mx=0; const M={};
+  TORDER.forEach(t=>NORDER.forEach(n=>{ const L=SP.filter(s=>s.t===t&&s.n===n); M[t+n]=L.length?sum(L):null; if(L.length) mx=Math.max(mx,M[t+n]); }));
+  let h='<tr><th></th>'+NORDER.map(n=>`<th>${NSHORT[n]}</th>`).join('')+'</tr>';
+  TORDER.forEach(t=>{ h+=`<tr><th class="rh">${TRIB[t].name}</th>`+NORDER.map(n=>{ const v=M[t+n]; if(v===null) return '<td class="nil">–</td>';
+    const a=0.1+0.9*Math.sqrt(v/mx); return `<td data-t="${t}" data-n="${n}" style="background:color-mix(in srgb, var(--accent) ${Math.round(a*85)}%, var(--surface));color:${a>.55?'var(--surface)':'var(--ink)'}" title="${TRIB[t].name} · ${NIV[n]}: ${f1(v)} m²">${f0(v)}</td>`; }).join('')+'</tr>'; });
+  $('#matrix').innerHTML=h;
+  $('#matrix').querySelectorAll('td[data-t]').forEach(td=>td.onclick=()=>goFilter({t:td.dataset.t,n:td.dataset.n}));
+  // regímenes
+  $('#regGrid').innerHTML = Object.entries(REG).map(([k,R])=>{ const L=SP.filter(s=>s.r===k);
+    return `<button class="reg" style="--c:var(${R.c})" data-r="${k}"><div class="eyebrow">${k} · ${L.length} espacios · ${f0(sum(L))} m²</div><h3>${R.name}</h3><p class="n">${R.incl}</p><p>${R.act}</p></button>`; }).join('');
+  $('#regGrid').querySelectorAll('.reg').forEach(b=>b.onclick=()=>goFilter({r:b.dataset.r}));
+  // progreso
+  const cnt={pending:0,ok:0,partial:0,fail:0,mec:0,na:0}; SP.forEach(s=>cnt[evaluate(s).st]++);
+  const done=SP.length-cnt.pending-cnt.na;
+  const cols={ok:'var(--ok)',partial:'var(--warn)',fail:'var(--bad)',mec:'var(--mec)'};
+  $('#progressBox').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><span class="num" style="font-family:var(--f-display);font-size:30px;font-weight:700">${done} <span style="font-size:18px;color:var(--muted)">de ${SP.length-cnt.na}</span></span><span class="howto">espacios revisados en este navegador</span></div>
+    <div class="progress">${['ok','partial','fail','mec'].map(k=>`<i style="width:${cnt[k]/(SP.length-cnt.na)*100}%;background:${cols[k]}"></i>`).join('')}</div>
+    <div class="legend">${['ok','partial','fail','mec'].map(k=>`<span><span class="dot" style="background:${cols[k]}"></span>${ST[k]}: ${cnt[k]}</span>`).join('')}</div>
+    <p class="howto" style="margin-top:10px">Los ${cnt.na} espacios abiertos (R1) no cuentan: ya se ventilan por su condición abierta.</p>
+    <button class="btn" style="margin-top:6px" onclick="location.hash='espacios'">Continuar revisando</button>`;
+}
+function goFilter(o){ Object.assign(F,{t:'',n:'',r:'',st:'',q:''},o); $('#q').value=''; location.hash='espacios'; update(); window.scrollTo(0,0); }
+
+/* ---------- Documentos ---------- */
+const DOC = { cur: loadPref('doc','inf'), pg: loadPref('pg',{inf:1,ppt:1}), zoom:false };
+const DOCINFO = {
+  inf:{pdf:'pdf/informe-ventilacion-natural.pdf',desc:'Informe completo: clima, viento medido, metodología, resultados por tribuna y anexo con los 758 espacios.'},
+  ppt:{pdf:'pdf/presentacion-areas-minimas.pdf',desc:'Presentación para diseño: recomendaciones y una lámina con la tabla de cada tribuna y nivel.'}
+};
+function openDoc(d,p){ DOC.cur=d; DOC.pg[d]=p; location.hash='documentos'; renderDoc(); }
+function renderDoc(){
+  const d=DOC.cur, n=D.pages[d]; let p=Math.min(Math.max(1,DOC.pg[d]||1),n); DOC.pg[d]=p;
+  savePref('doc',d); savePref('pg',DOC.pg);
+  $('#docInf').setAttribute('aria-pressed',d==='inf'); $('#docPpt').setAttribute('aria-pressed',d==='ppt');
+  $('#docDesc').textContent=DOCINFO[d].desc; $('#pdfLink').href=DOCINFO[d].pdf;
+  const toc=D.toc[d]; let curIdx=-1; toc.forEach((x,i)=>{ if(x[1]<=p) curIdx=i; });
+  $('#toc').innerHTML = toc.map((x,i)=>`<li><button data-p="${x[1]}" aria-current="${i===curIdx}"><span>${esc(x[0])}</span><span>${x[1]}</span></button></li>`).join('');
+  $('#toc').querySelectorAll('button').forEach(b=>b.onclick=()=>{ DOC.pg[d]=+b.dataset.p; renderDoc(); $('#pagebox').scrollIntoView({block:'nearest'}); });
+  $('#pgIn').value=p; $('#pgIn').max=n; $('#pgTot').textContent='de '+n;
+  const src=`doc/${d}-${String(p).padStart(2,'0')}.jpg`;
+  $('#pgImg').src=src; $('#pgImg').alt=`${d==='inf'?'Informe':'Presentación'}, página ${p}`;
+  if(p<n){ const im=new Image(); im.src=`doc/${d}-${String(p+1).padStart(2,'0')}.jpg`; }
+  $('#prevPg').disabled=p<=1; $('#nextPg').disabled=p>=n;
+}
+$('#docInf').onclick=()=>{ DOC.cur='inf'; renderDoc(); };
+$('#docPpt').onclick=()=>{ DOC.cur='ppt'; renderDoc(); };
+$('#prevPg').onclick=()=>{ DOC.pg[DOC.cur]--; renderDoc(); };
+$('#nextPg').onclick=()=>{ DOC.pg[DOC.cur]++; renderDoc(); };
+$('#pgIn').addEventListener('change',e=>{ DOC.pg[DOC.cur]=+e.target.value||1; renderDoc(); });
+$('#zoomBtn').onclick=()=>{ DOC.zoom=!DOC.zoom; $('#pagebox').classList.toggle('zoom',DOC.zoom); $('#zoomBtn').setAttribute('aria-pressed',DOC.zoom); $('#zoomBtn').textContent=DOC.zoom?'Ajustar al ancho':'Ampliar'; };
+document.addEventListener('keydown',e=>{
+  if($('#view-documentos').hidden||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+  if(e.key==='ArrowLeft'){ DOC.pg[DOC.cur]--; renderDoc(); } if(e.key==='ArrowRight'){ DOC.pg[DOC.cur]++; renderDoc(); }
+});
+
+
+/* ---------- Recorrido animado: cómo leer los datos ---------- */
+const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TT = { ids:[], at(ms,fn){ this.ids.push(setTimeout(fn, RM?0:ms)); }, every(ms,fn){ const id=setInterval(fn,ms); this.ids.push(id); }, clear(){ this.ids.forEach(i=>{clearTimeout(i);clearInterval(i);}); this.ids=[]; } };
+function countUp(el,to,fmt,dur=900){
+  if(RM){ el.textContent=fmt(to); return; }
+  const t0=performance.now();
+  const tick=now=>{ const k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3); el.textContent=fmt(to*e); if(k<1&&el.isConnected) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}
+const reveal=(root,sel='.rv',gap=260,start=150)=>root.querySelectorAll(sel).forEach((el,i)=>TT.at(start+i*gap,()=>el.classList.add('in')));
+// Ejemplo real del anexo: Baños Hombres OCC · nivel 1
+const EX = SP.find(s=>s.s==='Baños Hombres OCC'&&s.n==='N1') || SP[0];
+const EXq = EX.q/3600, EXae = EXq/(1.0*EX.ef*0.35), EXas = EXae*0.7;
+
+const COLS = [
+  ['Niv.','N1',0,'Nivel del estadio donde está el espacio. N-1 es el sótano; después vienen N1, N2A, N2B y N3 a N6.'],
+  ['Espacio',EX.s,0,'Nombre del recinto como figura en la tabla de áreas. El final del nombre dice la tribuna: OCC, NOR, ORI o SUR.'],
+  ['Tipo de espacio',EX.ty,0,'Uso asignado al recinto. Define cuántas renovaciones de aire necesita.'],
+  ['Área m²',f0(EX.a),1,'Área de piso del recinto.'],
+  ['h m',f1(EX.h),1,'Altura libre. Área × altura da el volumen de aire que hay que renovar.'],
+  ['Rph',f0(EX.rph),2,'Renovaciones por hora: cuántas veces se cambia todo el aire del recinto en una hora. Baños 20, cocinas 30, salas de máquinas 40.'],
+  ['Caudal m³/h',f0(EX.q),2,'Aire que hay que mover cada hora (volumen × Rph). Con este dato se dimensiona un sistema mecánico cuando la ventilación natural no alcanza.'],
+  ['Ef. ub.',String(EX.ef).replace('.',','),3,'Eficiencia por ubicación: qué tan de frente le llega la brisa a la fachada. 0,9 Oriental · 0,6 Norte y Sur · 0,4 Occidental · 0,2 recinto interior.'],
+  ['Vano',EX.v,3,'Tipo de abertura supuesto para el cálculo: rejilla (eficiencia 0,35) o ventana proyectante (0,50).'],
+  ['Aₜ m²',f2(EX.at),4,'El dato clave. Área libre total de abertura, entrada + salida, que el diseño debe tener como mínimo.'],
+  ['Rég.',EX.r,5,'Régimen: dice cómo leer el Aₜ. R3 es baño: se verifica contra el diseño y, si no alcanza, se complementa con extracción mecánica.']
+];
+const GROUPS = [['Qué espacio es','--r1'],['Tamaño del recinto','--r2'],['Cuánto aire necesita','--air'],['Cómo le llega el aire','--r6'],['Resultado','--accent'],['Cómo tratarlo','--r4']];
+const READ = {R1:'Referencial',R2:'Objetivo de diseño',R3:'A verificar',R4:'Complementario',R5:'Requisito con rejilla',R6:'Indicativo'};
+const READTXT = {
+  R1:'Ya se ventilan por la condición abierta del estadio. No se abren vanos adicionales.',
+  R2:'Vanos operables a fachada o a espacio abierto. Sin esa opción: aire acondicionado o ventilación mecánica.',
+  R3:'Comparar con las aberturas finales. Si no alcanzan: extracción mecánica.',
+  R4:'Extracción mecánica siempre. El Aₜ sirve como aire de reposición.',
+  R5:'Rejilla permanente. Los cuartos de residuos van en depresión.',
+  R6:'Depende del calor de los equipos. Lo define la ingeniería.'
+};
+
+function roomSVG(mode){
+  const L=70,R=350,T=50,B=200;
+  const wall=(x,gaps)=>{ let y=T, s=''; gaps.sort((a,b)=>a[0]-b[0]).forEach(([a,b])=>{ s+=`<line x1="${x}" y1="${y}" x2="${x}" y2="${a}"/>`; y=b; }); return s+`<line x1="${x}" y1="${y}" x2="${x}" y2="${B}"/>`; };
+  const open=(x,a,b)=>`<line x1="${x}" y1="${a}" x2="${x}" y2="${b}" stroke="var(--accent)" stroke-width="6" stroke-linecap="butt" opacity=".9"/>`;
+  const lab=(x,y,t1,t2,anchor='middle')=>`<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="12" font-weight="700" fill="var(--ink)">${t1}</text><text x="${x}" y="${y+14}" text-anchor="${anchor}" font-size="11.5" fill="var(--muted)">${t2}</text>`;
+  let g='', fl='', lb='';
+  if(mode===0){ g=wall(L,[[130,175]])+wall(R,[[75,115]]); fl=`<path class="flow" marker-end="url(#ah)" d="M8,152 L70,152 C170,152 240,96 350,95 L410,95"/>`;
+    lb=open(L,130,175)+open(R,75,115)+lab(36,112,'Entrada',`Aₑ ${f2(EXae)} m²`)+lab(385,135,'Salida',`Aₛ ${f2(EXas)} m²`); }
+  if(mode===1){ g=wall(L,[[60,90],[158,190]])+wall(R,[]); fl=`<path class="flow" marker-end="url(#ah)" d="M8,174 L70,174 C230,174 290,160 290,124 C290,84 230,75 70,75 L8,75"/>`;
+    lb=open(L,60,90)+open(L,158,190)+lab(36,48,'Salida alta',`Aₛ ${f2(EXas)} m²`)+lab(36,214,'Entrada baja',`Aₑ ${f2(EXae)} m²`); }
+  if(mode===2){ g=wall(L,[[100,160]])+wall(R,[]); fl=`<path class="flow" marker-end="url(#ah)" d="M8,146 L70,146 C180,146 215,138 215,130 C215,120 180,114 70,114 L8,114"/>`;
+    lb=open(L,100,160)+lab(36,184,'Un solo vano',`Aₜ ${f2(EX.at)} m²`); }
+  return `<svg viewBox="0 0 420 240" role="img" aria-label="Corte de un recinto con sus aberturas">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--air)"/></marker></defs>
+    <rect x="${L}" y="${T}" width="${R-L}" height="${B-T}" fill="var(--surface)"/>
+    <g stroke="var(--ink)" stroke-width="5" stroke-linecap="square">${g}<line x1="${L-2}" y1="${T}" x2="${R+2}" y2="${T}"/><line x1="40" y1="${B}" x2="380" y2="${B}"/></g>
+    ${fl}${lb}
+    <text x="${(L+R)/2}" y="${B-12}" text-anchor="middle" font-size="11" fill="var(--muted)" letter-spacing="1.5">SECCIÓN DEL RECINTO</text>
+  </svg>`;
+}
+
+function windSVG(){
+  const cx=170,cy=126,rx=68,ry=88;
+  const seg={ORI:[-38,38,.9],SUR:[52,128,.6],OCC:[142,218,.4],NOR:[232,308,.6]};
+  const r=ROT*Math.PI/180;
+  const P=(a,k=1)=>{ const t=a*Math.PI/180, x=rx*k*Math.cos(t), y=ry*k*Math.sin(t); return [cx+x*Math.cos(r)-y*Math.sin(r), cy+x*Math.sin(r)+y*Math.cos(r)]; };
+  const Q=(a)=>[cx+rx*Math.cos(a*Math.PI/180), cy+ry*Math.sin(a*Math.PI/180)];
+  let s=`<svg viewBox="0 0 360 260" role="img" aria-label="Con el norte real arriba, la brisa ENE llega de frente a la tribuna Oriental">`;
+  s+=`<g transform="rotate(${ROT} ${cx} ${cy})"><rect x="${cx-24}" y="${cy-37}" width="48" height="74" rx="3" fill="var(--surface-2)" stroke="var(--line)"/><line x1="${cx-24}" y1="${cy}" x2="${cx+24}" y2="${cy}" stroke="var(--line)"/><circle cx="${cx}" cy="${cy}" r="6.5" fill="none" stroke="var(--line)"/>`;
+  for(const t in seg){ const [a1,a2,e]=seg[t]; const p1=Q(a1),p2=Q(a2);
+    s+=`<path d="M${p1[0].toFixed(1)},${p1[1].toFixed(1)} A${rx},${ry} 0 0 1 ${p2[0].toFixed(1)},${p2[1].toFixed(1)}" fill="none" stroke="var(--accent)" stroke-opacity="${(0.25+e*0.8).toFixed(2)}" stroke-width="24"/>`; }
+  s+=`</g>`;
+  for(const t in seg){ const m=P((seg[t][0]+seg[t][1])/2);
+    s+=`<text x="${m[0].toFixed(1)}" y="${(m[1]+4).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)" style="font-family:var(--f-display);letter-spacing:.06em">${t}</text>`; }
+  // partículas: se mueven hacia el OSO (rumbo 247,5°), es decir, giradas -22,5° desde la horizontal
+  s+=`<g transform="rotate(-22.5 ${cx} ${cy})">`;
+  for(let i=0;i<16;i++){ const y=cy-110+i*14, d=(i*0.37)%2.6, len=14+(i%3)*8;
+    s+=`<line class="wp" style="animation-delay:-${d.toFixed(2)}s" x1="${cx+195}" y1="${y}" x2="${cx+195+len}" y2="${y}" stroke="var(--air)" stroke-width="2" stroke-linecap="round"/>`; }
+  s+=`</g>`;
+  s+=northArrow(18,22);
+  s+=`<text x="40" y="18" font-size="10.5" font-weight="700" fill="var(--air)">BRISA DESDE EL ENE · 1,0–2,9 m/s</text>`;
+  s+=`<rect x="296" y="30" width="60" height="20" rx="10" fill="var(--ink)"/><text x="326" y="44" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--surface)" letter-spacing="1">PLANTA</text>`;
+  s+=`<text x="180" y="254" text-anchor="middle" font-size="10.5" fill="var(--muted)">Barlovento: ORI · Paralelas: NOR y SUR · Sotavento: OCC</text></svg>`;
+  return s;
+}
+
+const STEPS = [
+ { nav:'Organización', title:'Cómo está organizada la información',
+   text:`<p>Los dos documentos traen la misma tabla de resultados para los ${f0(SP.length)} espacios. Se busca igual en ambos: <b>tribuna → nivel → espacio</b>.</p>
+     <p>La <b>presentación</b> tiene una lámina por cada tribuna y nivel (láminas 5 a 33). El <b>informe</b> trae el detalle en el anexo (capítulo 9), con el mismo orden y agrupado por régimen.</p>
+     <div class="key">En este recorrido seguimos un ejemplo real: <b>${EX.s}</b>, nivel 1, lámina ${EX.pp}.</div>`,
+   links:[['ppt',EX.pp,`Lámina ${EX.pp}`],['inf',33,'Anexo del informe']],
+   stage(){ return `<div class="org">
+      <div class="org-l rv"><span class="lab">Documento</span><div class="org-o"><span data-p>Presentación · 34 láminas</span><span>Informe · 49 páginas</span></div></div>
+      <div class="org-l rv"><span class="lab">Tribuna</span><div class="org-o">${TORDER.map(t=>`<span ${t===EX.t?'data-p':''}>${TRIB[t].name}</span>`).join('')}</div></div>
+      <div class="org-l rv"><span class="lab">Nivel</span><div class="org-o">${NORDER.map(n=>`<span ${n===EX.n?'data-p':''}>${n==='N-1'?'Sótano':NIV[n]}</span>`).join('')}</div></div>
+      <div class="org-l rv"><span class="lab">Espacio</span><figure class="slide" style="margin:0"><img src="doc/ppt-${String(EX.pp).padStart(2,'0')}.jpg" alt="Lámina ${EX.pp}: resultados de la tribuna Occidental, nivel 1"><span class="hl"></span><figcaption>Lámina ${EX.pp} · Resultados Tribuna Occidental – Nivel 1</figcaption></figure></div>
+    </div>`; },
+   play(st){ const ls=st.querySelectorAll('.org-l');
+     ls.forEach((l,i)=>{ TT.at(150+i*700,()=>l.classList.add('in')); const p=l.querySelector('[data-p]'); if(p) TT.at(550+i*700,()=>p.classList.add('pick')); });
+     TT.at(150+3*700+500,()=>st.querySelector('.slide').classList.add('in')); } },
+
+ { nav:'Una fila', title:'Anatomía de una fila de la tabla',
+   text:`<p>Cada fila tiene 11 columnas, pero se leen en <b>seis bloques</b>: qué espacio es, su tamaño, cuánto aire necesita, cómo le llega el aire, el resultado y cómo tratarlo.</p>
+     <p>Toca cualquier columna para ver qué significa.</p>
+     <div class="key">Lo que debe cumplir el diseño es la columna <b>Aₜ m²</b>. La columna <b>Rég.</b> dice cómo interpretarla.</div>`,
+   links:[['ppt',4,'Lámina 4 · Abreviaturas'],['inf',11,'Metodología, pág. 11']],
+   stage(){ return `<div class="anat-wrap rv"><table class="anat num"><tr>${COLS.map((c,i)=>`<th data-i="${i}" style="--g:var(${GROUPS[c[2]][1]})">${c[0]}</th>`).join('')}</tr>
+       <tr>${COLS.map((c,i)=>`<td data-i="${i}" style="--g:var(${GROUPS[c[2]][1]})">${esc(c[1])}</td>`).join('')}</tr></table></div>
+     <div class="anat-say rv" id="anatSay"></div>
+     <div class="anat-leg rv">${GROUPS.map(g=>`<span><span class="dot" style="background:var(${g[1]})"></span>${g[0]}</span>`).join('')}</div>`; },
+   play(st){ reveal(st); let i=0, auto=true;
+     const show=k=>{ const c=COLS[k], g=GROUPS[c[2]];
+       st.querySelectorAll('.anat th,.anat td').forEach(el=>{ const on=+el.dataset.i===k; el.classList.toggle('on',on); el.classList.toggle('dim',!on && COLS[+el.dataset.i][2]!==c[2]); });
+       const say=st.querySelector('#anatSay'); say.style.setProperty('--g',`var(${g[1]})`);
+       say.innerHTML=`<span class="k">${c[0]}</span><span class="gname">${g[0]} · ${esc(c[1])}</span><p>${c[3]}</p>`; };
+     st.querySelectorAll('.anat th,.anat td').forEach(el=>el.addEventListener('click',()=>{ auto=false; show(+el.dataset.i); }));
+     TT.at(500,()=>show(0)); TT.every(RM?1e9:2300,()=>{ if(!auto) return; i=(i+1)%COLS.length; show(i); }); } },
+
+ { nav:'El cálculo', title:'Del recinto al área de abertura',
+   text:`<p>El cálculo iguala el aire que el recinto necesita renovar con el que la brisa puede meter por un vano.</p>
+     <p>Para el ejemplo: el volumen se multiplica por las renovaciones y da el <b>caudal</b>. Ese caudal se divide por la velocidad del viento (1,0 m/s) y por dos eficiencias: la de la ubicación y la del tipo de vano.</p>
+     <div class="key">La salida se toma como el 70 % de la entrada. Por eso <b>Aₜ = entrada × 1,7</b>.</div>`,
+   links:[['inf',11,'Modelo de cálculo, pág. 11'],['inf',12,'Renovaciones por tipo, pág. 12']],
+   stage(){ return `<div class="roomfill rv"><svg viewBox="0 0 150 100" aria-hidden="true">
+        <path d="M20,30 L80,15 L130,30 L70,45 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+        <path d="M20,30 L20,80 L70,95 L70,45 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+        <path d="M70,45 L70,95 L130,80 L130,30 Z" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/>
+        <clipPath id="cpL"><path d="M20,30 L20,80 L70,95 L70,45 Z"/></clipPath><clipPath id="cpR"><path d="M70,45 L70,95 L130,80 L130,30 Z"/></clipPath>
+        <rect class="fillrect" id="fillL" clip-path="url(#cpL)" x="15" y="100" width="60" height="0" style="y:100px;height:0px" fill="var(--air)" opacity=".45"/>
+        <rect class="fillrect" id="fillR" clip-path="url(#cpR)" x="65" y="100" width="70" height="0" style="y:100px;height:0px" fill="var(--air)" opacity=".35"/>
+        <text x="45" y="72" font-size="9" fill="var(--ink)" text-anchor="middle">${f1(EX.h)} m</text><text x="100" y="20" font-size="9" fill="var(--ink)">${f0(EX.a)} m²</text></svg>
+        <p><b style="color:var(--ink)">${esc(EX.s)}</b><br>${f0(EX.a)} m² de piso · ${f1(EX.h)} m de altura · tribuna Occidental (ef. 0,4) · rejilla (0,35)</p></div>
+      <div class="calc">
+        <div class="cnode rv"><span class="op">${f0(EX.a)} m² × ${f1(EX.h)} m</span><span class="lab">Volumen</span><span class="val"><span data-c="${EX.a*EX.h}" data-d="1">0</span><small>m³</small></span><span class="f">aire dentro del recinto</span></div>
+        <div class="cnode rv"><span class="op">× ${f0(EX.rph)} renovaciones/h</span><span class="lab">Caudal</span><span class="val"><span data-c="${EX.q}" data-d="0">0</span><small>m³/h</small></span><span class="f">= ${f2(EXq)} m³/s</span></div>
+        <div class="cnode rv"><span class="op">÷ (1,0 m/s × ${String(EX.ef).replace('.',',')} × 0,35)</span><span class="lab">Entrada Aₑ</span><span class="val"><span data-c="${EXae}" data-d="2">0</span><small>m²</small></span><span class="f">viento × ef. ubicación × ef. vano</span></div>
+        <div class="cnode rv"><span class="op">+ salida 70 % (${f2(EXas)} m²)</span><span class="lab">Total Aₜ</span><span class="val"><span data-c="${EX.at}" data-d="2">0</span><small>m²</small></span><span class="f">valor de la columna Aₜ</span></div>
+      </div>`; },
+   play(st){ st.querySelector('.roomfill').classList.add('in');
+     TT.at(300,()=>{ const a=st.querySelector('#fillL'), b=st.querySelector('#fillR'); [a,b].forEach(r=>{ r.style.y='25px'; r.style.height='75px'; }); });
+     st.querySelectorAll('.cnode').forEach((n,i)=>TT.at(700+i*1100,()=>{ n.classList.add('in'); const v=n.querySelector('[data-c]'); const d=+v.dataset.d; countUp(v,+v.dataset.c,x=>x.toLocaleString('es-CO',{minimumFractionDigits:d,maximumFractionDigits:d})); if(i===3) n.classList.add('total'); })); } },
+
+ { nav:'La tribuna', title:'La tribuna cambia el resultado',
+   text:`<p>El estadio está girado 22° respecto al norte. La brisa dominante del <b>este-noreste</b> golpea de frente la tribuna Oriental y deja a la Occidental en la sombra del viento.</p>
+     <p>Por eso un mismo recinto necesita distinta abertura según dónde esté. A la derecha, el mismo baño calculado en cada posición.</p>
+     <div class="key">En la Occidental se necesita <b>2,25 veces</b> la abertura de la Oriental. Un recinto interior sin fachada, <b>4,5 veces</b>.</div>`,
+   links:[['inf',9,'Implantación, pág. 9'],['inf',10,'Eficiencias, pág. 10']],
+   stage(){ const rows=[['Oriental · barlovento',0.9],['Norte o Sur · paralela',0.6],['Occidental · sotavento',0.4],['Recinto interior sin fachada',0.2]];
+     const base=EXq/0.35*1.7, mx=base/0.2;
+     return `<div class="wind-grid"><div class="rv">${windSVG()}</div><div class="bars">${rows.map(([n,e])=>`<div class="bar-r rv"><div class="top"><span>${n}</span><b class="num">${f2(base/e)} m²</b></div><div class="track"><i data-w="${(base/e/mx*100).toFixed(1)}" style="${e===0.4?'background:var(--ink)':''}"></i></div><div class="sub">eficiencia ${String(e).replace('.',',')}${e===0.4?' · el caso del ejemplo':''}</div></div>`).join('')}</div></div>`; },
+   play(st){ reveal(st,'.rv',350); st.querySelectorAll('.track i').forEach((b,i)=>TT.at(700+i*450,()=>b.style.width=b.dataset.w+'%')); } },
+
+ { nav:'Regímenes', title:'Seis regímenes: el número no se lee igual',
+   text:`<p>Todos los espacios se calcularon con la misma fórmula, pero no todos se ventilan igual en la realidad. Por eso se agruparon en <b>seis regímenes</b>.</p>
+     <p>El régimen dice si el Aₜ es una meta que el diseño debe cumplir, algo que hay que verificar o solo una referencia.</p>
+     <div class="key">Ejemplo: en una cocina (R4) cumplir el Aₜ <b>no basta</b>: siempre lleva extracción mecánica.</div>`,
+   links:[['ppt',4,'Lámina 4 · Regímenes'],['inf',13,'Regímenes, pág. 13']],
+   stage(){ const mx=Math.max(...Object.keys(REG).map(k=>SP.filter(s=>s.r===k).length));
+     return `<div class="regs">${Object.entries(REG).map(([k,R])=>{ const n=SP.filter(s=>s.r===k).length;
+       return `<div class="rg rv" style="--c:var(${R.c})"><div class="h"><b>${k}</b><span class="num">${n} espacios</span></div><div class="nm">${R.name}</div><div class="cnt"><i data-w="${(n/mx*100).toFixed(0)}"></i></div><span class="read">${READ[k]}</span><p>${READTXT[k]}</p></div>`; }).join('')}</div>`; },
+   play(st){ reveal(st,'.rv',300); st.querySelectorAll('.cnt i').forEach((b,i)=>TT.at(450+i*300,()=>b.style.width=b.dataset.w+'%')); } },
+
+ { nav:'Repartir el área', title:'Cómo repartir el Aₜ en los muros',
+   text:`<p>El Aₜ es el <b>mínimo</b> para el diseño y se reparte entre una entrada y una salida de aire. El orden de preferencia es:</p>
+     <p><b>1.</b> Dos fachadas: un vano de entrada y otro de salida.<br><b>2.</b> Si no se puede, dos vanos en la misma fachada, uno inferior y otro superior.<br><b>3.</b> En último caso, un solo vano.</p>
+     <div class="key">Es <b>área libre</b>: la superficie por la que realmente pasa el aire. En una corrediza de 2 hojas solo cuenta la <b>mitad</b> de la ventana.</div>`,
+   links:[['ppt',4,'Lámina 4 · Indicaciones'],['inf',33,'Anexo, pág. 33']],
+   stage(){ return `<div class="modes rv" role="group" aria-label="Opciones de distribución"><button data-m="0" aria-pressed="true">1 · Dos fachadas</button><button data-m="1" aria-pressed="false">2 · Misma fachada</button><button data-m="2" aria-pressed="false">3 · Un solo vano</button></div>
+      <div class="room rv" id="roomBox"></div><div class="mode-say rv" id="modeSay"></div>`; },
+   play(st){ reveal(st,'.rv',250); let m=0, auto=true;
+     const SAY=[['Ideal · ventilación cruzada','La entrada en una fachada y la salida en la opuesta. El aire atraviesa todo el recinto.'],
+                ['Alternativa · vano bajo y vano alto','En la misma fachada: entra por abajo y sale por arriba. Aprovecha el tiro térmico, útil en la tribuna Occidental.'],
+                ['Último caso · un solo vano','Toda el área en un vano. El aire entra y sale por el mismo hueco y renueva peor el fondo del recinto.']];
+     const show=k=>{ m=k; st.querySelector('#roomBox').innerHTML=roomSVG(k); st.querySelector('#modeSay').innerHTML=`<b>${SAY[k][0]}</b>${SAY[k][1]}`;
+       st.querySelectorAll('.modes button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.m===k)); };
+     show(0); st.querySelectorAll('.modes button').forEach(b=>b.onclick=()=>{ auto=false; show(+b.dataset.m); });
+     TT.every(RM?1e9:4500,()=>{ if(auto) show((m+1)%3); }); } },
+
+ { nav:'Verificar', title:'Comparar con el diseño',
+   text:`<p>Con los planos, se suma el área libre de los vanos de cada espacio y se compara con el Aₜ. El informe lo define para los baños (capítulo 7), y esta herramienta lo usa como referencia para todos los espacios:</p>
+     <p><b>Menos de 50 %</b>: ventilación mecánica principal.<br><b>Entre 50 y 100 %</b>: natural con extracción de apoyo.<br><b>100 % o más</b>: ventilación natural.<br><b>Sin vanos a fachada, cubierta ni espacio abierto</b>: revisión técnica del espacio.</p>
+     <div class="key">Si no se cumple, el equipo técnico puede usar inyección o extracción, dimensionadas con la columna <b>caudal</b>.</div>`,
+   links:[['inf',29,'Criterio, pág. 29'],['ppt',3,'Lámina 3 · Sistemas mecánicos']],
+   stage(){ return `<div class="vm">
+      <div class="vm-read rv"><div><div class="eyebrow">Abertura en el diseño · ${esc(EX.s)}</div><div class="big2 num"><span id="vmV">0,00</span> <span style="font-size:22px">m²</span></div></div><div class="num" style="font-size:15px">de <b>${f2(EX.at)} m²</b> requeridos · <b id="vmP">0 %</b></div></div>
+      <div class="rv"><div class="vm-track"><span style="width:33.33%;background:var(--bad-soft)"></span><span style="width:33.33%;background:var(--warn-soft)"></span><span style="width:33.34%;background:var(--ok-soft)"></span><i class="vm-needle" id="vmN"></i></div>
+        <div class="vm-ticks num"><span style="left:0">0 %</span><span style="left:33.33%">50 %</span><span style="left:66.66%">100 %</span><span style="left:100%">150 %</span></div></div>
+      <div class="vm-out rv"><div class="vo bad"><b>Mecánica principal</b>La abertura queda como reposición de aire.</div><div class="vo mid"><b>Natural + apoyo</b>Extracción de baja potencia por ocupación u horario de eventos.</div><div class="vo good"><b>Ventilación natural</b>En baños, rejilla con lamas y protección visual.</div></div>
+      <div class="vm-extra rv"><span class="pill st-mec">Sin vanos al exterior → revisión técnica</span><span class="pill st-fail">Cocinas → extracción siempre</span><span class="pill st-na">Abiertos (R1) → ya ventilados</span></div></div>`; },
+   play(st){ reveal(st,'.rv',220);
+     const go=r=>{ st.querySelector('#vmN').style.left=Math.min(r/1.5,1)*100+'%'; countUp(st.querySelector('#vmV'),EX.at*r,f2,1200); st.querySelector('#vmP').textContent=Math.round(r*100)+' %';
+       st.querySelectorAll('.vo').forEach(v=>v.classList.remove('on')); st.querySelector(r<.5?'.vo.bad':r<1?'.vo.mid':'.vo.good').classList.add('on'); };
+     const seq=[.3,.75,1.2]; let k=0; TT.at(900,()=>go(seq[0])); TT.every(RM?1e9:2600,()=>{ k=(k+1)%seq.length; go(seq[k]); }); } },
+
+ { nav:'A tener en cuenta', title:'Lo que hay que tener en cuenta',
+   text:`<p>Estas son las condiciones del estudio y las recomendaciones de la presentación que afectan la lectura de cualquier espacio.</p>
+     <p>Las recomendaciones son <b>orientativas</b>. La solución final de cada recinto (tipo de vano, ubicación, protecciones y sistemas) la define cada especialidad.</p>`,
+   links:[['ppt',2,'Lámina 2 · Recomendaciones'],['ppt',3,'Lámina 3 · Sistemas mecánicos'],['inf',20,'Sensibilidad al viento, pág. 20']],
+   stage(){ const C=[
+      ['Sobre los números',[
+        ['El Aₜ es un mínimo','Es área libre, entrada + salida. Por debajo de ese valor el recinto necesita apoyo mecánico.'],
+        ['Viento de diseño de 1,0 m/s','Es el límite inferior de lo medido en la Torre SIATA (1,0–2,9 m/s), así que es conservador. Con 0,4 m/s el total pasaría de 2.988 a 7.471 m².'],
+        ['Nivel 1 en ajuste','Algunos espacios pueden cambiar. Los calculados agrupados o dentro de otros espacios requieren revisión específica.'],
+        ['Técnicos interiores con ef. 0,2','Se supuso que ventilan a través de otro espacio. Es un supuesto a verificar en planos.']]],
+      ['Sobre el diseño',[
+        ['Rejillas permanentes','En baños, bodegas, cuartos técnicos y de aseo, aunque tengan apoyo mecánico.'],
+        ['Vanos regulables','Las noches son frescas (16,6 °C de mínima media). En recintos ocupados conviene usar ventanas corredizas.'],
+        ['Protección de lluvia','2.119 mm al año. Usar aleros y rejillas de lamas a contraviento frente a la fachada principal.'],
+        ['Espacios con aire acondicionado','Deben conservar ventanas corredizas o rejillas operables por si el sistema falla.']]],
+      ['Sobre los sistemas',[
+        ['Sin fachada ni cubierta','Sótano, recintos interiores, backstage, camerinos, data center y cuartos técnicos: inyección, extracción o ambas.'],
+        ['Cocinas y locales con cocción','Extracción mecánica siempre, con descargas en cubierta o a sotavento. La reposición puede ser natural o por inyección.'],
+        ['Baños dentro de espacios climatizados','Necesariamente llevan extracción mecánica.'],
+        ['Recintos climatizados','El aire exterior de renovación lo asegura el sistema mecánico. Conviene evaluar la recuperación de calor.']]]];
+     return `<div class="cons">${C.map(([h,items])=>`<div><h4 class="rv">${h}</h4><ul>${items.map(([b,t])=>`<li class="rv"><b>${b}</b>${t}</li>`).join('')}</ul></div>`).join('')}</div>`; },
+   play(st){ const cols=[...st.querySelectorAll('.cons > div')]; cols.forEach((c,ci)=>c.querySelectorAll('.rv').forEach((el,i)=>TT.at(150+i*320+ci*110,()=>el.classList.add('in')))); } }
+];
+
+let TI = Math.min(loadPref('tour',0), STEPS.length-1);
+function tourGo(i){
+  TT.clear(); TI=Math.max(0,Math.min(STEPS.length-1,i)); savePref('tour',TI);
+  const S=STEPS[TI];
+  $('#tourProg').innerHTML = STEPS.map((x,k)=>`<button class="${k<TI?'done':k===TI?'cur':''}" data-k="${k}" aria-label="Paso ${k+1}: ${x.title}" ${k===TI?'aria-current="step"':''}><i></i><span>${k+1} · ${x.nav}</span></button>`).join('');
+  $('#tourProg').querySelectorAll('button').forEach(b=>b.onclick=()=>tourGo(+b.dataset.k));
+  $('#tStep').textContent=`Paso ${TI+1} de ${STEPS.length}`;
+  $('#tTitle').textContent=S.title;
+  $('#tText').innerHTML=S.text;
+  $('#tLinks').innerHTML=S.links.map(([d,p,l])=>`<button class="btn" data-doc="${d}" data-pg="${p}">${l}</button>`).join('');
+  $('#tPrev').disabled=TI===0;
+  const last=TI===STEPS.length-1;
+  $('#tNext').textContent= last?'Empezar a consultar espacios →':'Siguiente →';
+  const st=$('#stage'); st.innerHTML=S.stage(); S.play(st);
+}
+$('#tPrev').onclick=()=>tourGo(TI-1);
+$('#tNext').onclick=()=>{ if(TI===STEPS.length-1){ location.hash='espacios'; window.scrollTo(0,0); } else tourGo(TI+1); };
+$('#tReplay').onclick=()=>tourGo(TI);
+document.addEventListener('keydown',e=>{
+  if($('#view-guia').hidden||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)||document.activeElement.id==='vidBar') return;
+  if(e.key==='ArrowRight') tourGo(TI+1); if(e.key==='ArrowLeft') tourGo(TI-1);
+});
+// aviso para quien entra por primera vez
+if(!loadPref('introSeen',false)) $('#introBanner').hidden=false;
+$('#introGo').onclick=()=>{ savePref('introSeen',true); $('#introBanner').hidden=true; location.hash='guia'; window.scrollTo(0,0); setTimeout(()=>VID.play(),300); };
+$('#introClose').onclick=()=>{ savePref('introSeen',true); $('#introBanner').hidden=true; };
+
+
+/* ---------- Video animado (línea de tiempo dibujada en SVG) ---------- */
+const VID = (()=>{
+  const C = (a,b,x)=>Math.max(a,Math.min(b,x));
+  const E = x=>1-Math.pow(1-C(0,1,x),3);
+  const seg = (lt,a,b)=>E((lt-a)/(b-a));
+  const nest = (svg,x,y,w,h)=>svg.replace('<svg ',`<svg x="${x}" y="${y}" width="${w}" height="${h}" `).replace(/tabindex="0" role="button"/g,'');
+  const T = (x,y,txt,o={})=>`<text x="${x}" y="${y}" ${o.id?`id="${o.id}"`:''} font-size="${o.fs||20}" font-weight="${o.fw||400}" fill="${o.c||'var(--ink)'}" text-anchor="${o.a||'start'}" ${o.disp?'style="font-family:var(--f-display);letter-spacing:.01em"':''} ${o.op!==undefined?`opacity="${o.op}"`:''}>${txt}</text>`;
+  const q=EX.q, ae=EXae, as=EXas, design=3*1.2, ratio=design/EX.at;
+  const SC = [
+    {id:'v1',d:9,chap:'Inicio',caps:[[0,'Este estudio calcula cuánta abertura necesita cada espacio del estadio para ventilarse con la brisa.'],[5,`Son ${SP.length} espacios en 8 niveles y 4 tribunas.`]],
+     svg:()=>`${nest(stadiumSVG({}),560,90,360,300)}
+       ${T(70,190,'Ventilación natural',{fs:56,fw:700,disp:1,id:'v1a'})}${T(70,240,'Estadio Atanasio Girardot · Medellín',{fs:24,c:'var(--muted)',id:'v1b'})}
+       <g id="v1c">${[[SP.length,'espacios'],[8,'niveles'],[4,'tribunas']].map(([n,l],i)=>`${T(70+i*140,320,n,{fs:44,fw:700,disp:1,c:'var(--accent)'})}${T(70+i*140,346,l,{fs:16,c:'var(--muted)'})}`).join('')}</g>`,
+     up:(lt,$g)=>{ $g('v1a').setAttribute('opacity',seg(lt,.2,1.4)); $g('v1b').setAttribute('opacity',seg(lt,.8,2)); $g('v1c').setAttribute('opacity',seg(lt,4.6,5.8)); }},
+    {id:'v2',d:13,chap:'La brisa',caps:[[0,'La brisa dominante llega del este-noreste (ENE), a 1,0–2,9 m/s según la Torre SIATA.'],[4.5,'La tribuna Oriental la recibe de frente. La Occidental queda a la sombra del viento.'],[9,'Por eso, un mismo recinto necesita 2,25 veces más abertura en la Occidental que en la Oriental.']],
+     svg:()=>`${nest(windSVG(),20,60,540,390)}
+       ${[['Oriental','barlovento',1,'0,9'],['Norte','paralela',1.5,'0,6'],['Sur','paralela',1.5,'0,6'],['Occidental','sotavento',2.25,'0,4']].map(([n,p,k,e],i)=>`<g id="v2r${i}" opacity="0">
+         ${T(600,130+i*78,n,{fs:24,fw:700,disp:1})}${T(600,152+i*78,`${p} · eficiencia ${e}`,{fs:14,c:'var(--muted)'})}
+         <rect x="760" y="${116+i*78}" width="150" height="18" rx="4" fill="var(--surface-2)"/><rect id="v2b${i}" x="760" y="${116+i*78}" width="0" height="18" rx="4" fill="${i===3?'var(--ink)':'var(--accent)'}" data-w="${(k/2.25*150).toFixed(1)}"/>
+         ${T(910,152+i*78,`${String(k.toFixed(2)).replace('.',',')} ×`,{fs:14,fw:700,a:'end'})}</g>`).join('')}
+       ${T(600,90,'Abertura que necesita un mismo recinto',{fs:15,c:'var(--muted)',id:'v2h'})}`,
+     up:(lt,$g)=>{ $g('v2h').setAttribute('opacity',seg(lt,4,5)); for(let i=0;i<4;i++){ const p=seg(lt,4.5+i*1.1,5.5+i*1.1); $g('v2r'+i).setAttribute('opacity',p); const b=$g('v2b'+i); b.setAttribute('width',(+b.dataset.w*seg(lt,5+i*1.1,6.6+i*1.1)).toFixed(1)); } }},
+    {id:'v3',d:12,chap:'Cuánto aire',caps:[[0,`Ejemplo: ${EX.s}, nivel 1. Tiene ${f0(EX.a)} m² de piso y ${f1(EX.h)} m de altura.`],[4,`Un baño debe renovar todo su aire ${f0(EX.rph)} veces por hora.`],[8,`Eso da un caudal de ${f0(q)} m³ por hora que la brisa tiene que mover.`]],
+     svg:()=>`<g transform="translate(110,120) scale(2.4)">
+         <path d="M20,30 L80,15 L130,30 L70,45 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="1"/>
+         <path d="M20,30 L20,80 L70,95 L70,45 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="1"/>
+         <path d="M70,45 L70,95 L130,80 L130,30 Z" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1"/>
+         ${Array.from({length:14},(_,i)=>`<circle id="v3p${i}" r="1.8" fill="var(--air)" cx="70" cy="60"/>`).join('')}</g>
+       <g id="v3a" opacity="0">${T(560,170,'Volumen',{fs:16,c:'var(--muted)'})}${T(560,212,`${f1(EX.a*EX.h)} m³`,{fs:40,fw:700,disp:1})}${T(760,212,`${f0(EX.a)} m² × ${f1(EX.h)} m`,{fs:15,c:'var(--muted)'})}</g>
+       <g id="v3b" opacity="0">${T(560,262,'Renovaciones',{fs:16,c:'var(--muted)'})}${T(560,304,`× ${f0(EX.rph)} por hora`,{fs:40,fw:700,disp:1,c:'var(--air)'})}</g>
+       <g id="v3c" opacity="0">${T(560,354,'Caudal',{fs:16,c:'var(--muted)'})}${T(560,400,`${f0(q)} m³/h`,{fs:48,fw:700,disp:1,c:'var(--accent)',id:'v3n'})}</g>`,
+     up:(lt,$g)=>{ $g('v3a').setAttribute('opacity',seg(lt,1,2)); $g('v3b').setAttribute('opacity',seg(lt,4,5)); $g('v3c').setAttribute('opacity',seg(lt,8,9));
+       $g('v3n').textContent=`${f0(q*seg(lt,8,10.5))} m³/h`;
+       const sp=lt>4?(0.6+seg(lt,4,8)*1.6):0.6;
+       for(let i=0;i<14;i++){ const a=i/14*Math.PI*2+lt*sp, rr=(i%2?18:28); $g('v3p'+i).setAttribute('cx',(72+rr*Math.cos(a)).toFixed(1)); $g('v3p'+i).setAttribute('cy',(58+rr*0.45*Math.sin(a)+ (i%3)*6).toFixed(1)); } }},
+    {id:'v4',d:11,chap:'El área de abertura',caps:[[0,'Con ese caudal, la eficiencia de la fachada y el tipo de vano, se calcula el área de abertura.'],[5,`Este baño necesita ${f2(EX.at)} m² en total: ${f2(ae)} m² de entrada y ${f2(as)} m² de salida.`]],
+     svg:()=>`${nest(roomSVG(0),30,90,560,320)}
+       <g id="v4a" opacity="0">${T(640,170,'Área de abertura requerida',{fs:16,c:'var(--muted)'})}${T(640,240,`${f2(EX.at)} m²`,{fs:68,fw:700,disp:1,c:'var(--accent)'})}</g>
+       <g id="v4b" opacity="0">${T(640,300,`Entrada  ${f2(ae)} m²`,{fs:22,fw:600})}${T(640,334,`Salida    ${f2(as)} m²`,{fs:22,fw:600})}${T(640,378,'Ideal: en fachadas opuestas',{fs:15,c:'var(--muted)'})}</g>`,
+     up:(lt,$g)=>{ $g('v4a').setAttribute('opacity',seg(lt,1,2.2)); $g('v4b').setAttribute('opacity',seg(lt,5,6.2)); }},
+    {id:'v5',d:16,chap:'Ventana corrediza',caps:[[0,'Importante: el área se cuenta sobre lo que realmente abre, no sobre el tamaño de la ventana.'],[4.5,'En una corrediza de 2 hojas, al abrir, una hoja se monta sobre la otra.'],[9.5,'Esta ventana de 2,0 × 1,2 m mide 2,4 m², pero solo deja pasar aire por 1,2 m²: la mitad.'],[13.5,'Una ventana fija no aporta. En batientes y proyectantes cuenta la hoja que abre.']],
+     svg:()=>`<rect x="40" y="46" width="86" height="26" rx="13" fill="var(--ink)"/>${T(83,64,'ALZADO',{fs:13,fw:700,c:'var(--surface)',a:'middle'})}${T(480,70,'Ventana corrediza de 2 hojas',{fs:26,fw:700,disp:1,a:'middle'})}
+       <rect x="276" y="116" width="408" height="248" fill="none" stroke="var(--ink)" stroke-width="8"/>
+       <rect id="v5o" x="480" y="120" width="200" height="240" fill="var(--air)" opacity="0"/>
+       <g id="v5f"><rect x="280" y="120" width="200" height="240" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="3"/><line x1="295" y1="135" x2="330" y2="170" stroke="var(--surface)" stroke-width="5" opacity=".6"/></g>
+       <g id="v5m"><rect x="480" y="120" width="200" height="240" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="3" opacity=".96"/><line x1="495" y1="135" x2="530" y2="170" stroke="var(--surface)" stroke-width="5" opacity=".6"/><rect x="488" y="225" width="8" height="34" rx="3" fill="var(--ink)"/></g>
+       <g id="v5w" opacity="0">${[170,240,310].map(y=>`<path d="M720 ${y} H540 m14 -10 l-14 10 14 10" stroke="var(--air)" stroke-width="4" fill="none" stroke-linecap="round"/>`).join('')}</g>
+       ${T(480,100,'2,0 m',{fs:15,c:'var(--muted)',a:'middle'})}${T(250,245,'1,2 m',{fs:15,c:'var(--muted)',a:'end'})}
+       <g id="v5t1">${T(480,410,'Ventana: 2,0 × 1,2 = 2,4 m²',{fs:24,fw:600,a:'middle'})}</g>
+       <g id="v5t2" opacity="0">${T(300,412,'2,4 m²',{fs:24,fw:600,c:'var(--muted)',a:'middle'})}<line x1="262" y1="404" x2="338" y2="404" stroke="var(--bad)" stroke-width="3"/>${T(560,414,'Abre: 1,0 × 1,2 = 1,2 m²',{fs:30,fw:700,disp:1,c:'var(--air)',a:'middle'})}</g>`,
+     up:(lt,$g)=>{ const p=seg(lt,4.5,8.5); $g('v5m').setAttribute('transform',`translate(${(-196*p).toFixed(1)},0)`);
+       $g('v5o').setAttribute('opacity',(0.35*seg(lt,6,8.5)).toFixed(2)); $g('v5w').setAttribute('opacity',seg(lt,8,9.5));
+       $g('v5t1').setAttribute('opacity',1-seg(lt,9,9.8)); $g('v5t2').setAttribute('opacity',seg(lt,9.5,10.5)); }},
+    {id:'v6',d:12,chap:'Leer la tabla',caps:[[0,'En la presentación y en el informe, cada espacio es una fila de la tabla.'],[3,'Primero ubica el espacio por su nombre: el final indica la tribuna.'],[6.5,'La columna Aₜ m² es el área que el diseño debe tener como mínimo.'],[9.5,'La columna Rég. dice cómo tratarlo; R3 es baño: se verifica contra el diseño y, si no alcanza, se revisa con el equipo técnico.']],
+     svg:()=>{ const cols=[['Niv.','N1',60],['Espacio',EX.s,230],['Área m²',f0(EX.a),90],['Rph',f0(EX.rph),70],['Caudal m³/h',f0(q),120],['Aₜ m²',f2(EX.at),100],['Rég.',EX.r,70]];
+       let x=60, h=''; const xs=[];
+       cols.forEach(([k,v,w])=>{ xs.push([x,w]); h+=`<rect x="${x}" y="190" width="${w-4}" height="40" rx="4" fill="var(--ink)"/>${T(x+(w-4)/2,216,k,{fs:16,fw:700,c:'var(--surface)',a:'middle'})}<rect x="${x}" y="234" width="${w-4}" height="50" rx="4" fill="var(--surface)" stroke="var(--line)"/>${T(x+(w-4)/2,266,esc(v),{fs:k==='Espacio'?17:20,fw:600,a:'middle'})}`; x+=w; });
+       window.__vidCols=xs;
+       return `${T(480,120,'Una fila de la tabla',{fs:26,fw:700,disp:1,a:'middle'})}${h}<rect id="v6h" x="60" y="186" width="10" height="102" rx="6" fill="none" stroke="var(--accent)" stroke-width="4" opacity="0"/>
+         ${T(480,350,'',{fs:22,fw:600,a:'middle',id:'v6t'})}`; },
+     up:(lt,$g)=>{ const xs=window.__vidCols||[]; const pick=lt<3?-1:lt<6.5?1:lt<9.5?5:6; const r=$g('v6h');
+       if(pick<0||!xs[pick]){ r.setAttribute('opacity',0); $g('v6t').textContent=''; return; }
+       r.setAttribute('opacity',1); r.setAttribute('x',xs[pick][0]-4); r.setAttribute('width',xs[pick][1]+4);
+       $g('v6t').textContent = pick===1?'¿Qué espacio es? (OCC = tribuna Occidental)':pick===5?`Debe tener al menos ${f2(EX.at)} m² de abertura`:'R3 · Baños: verificar contra el diseño'; }},
+    {id:'v7',d:15,chap:'Verificar',caps:[[0,'Para verificar, suma lo que realmente abre en el plano. Aquí hay 3 corredizas de 2,0 × 1,2 m.'],[5,`Cada una aporta 1,2 m²: en total ${f2(design)} m², contra ${f2(EX.at)} m² requeridos.`],[9.5,`Faltan ${f2(EX.at-design)} m²: el diseño tiene el ${pct(ratio)}. Este espacio queda para revisión de los equipos de arquitectura y técnico, que definen cómo cubrir el requerimiento.`]],
+     svg:()=>`${[0,1,2].map(i=>`<g id="v7w${i}" opacity="0" transform="translate(${90+i*130},150)"><rect x="0" y="0" width="104" height="66" fill="none" stroke="var(--ink)" stroke-width="4"/><rect x="2" y="2" width="50" height="62" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/><rect x="10" y="4" width="48" height="58" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/><rect x="54" y="2" width="48" height="62" fill="var(--air)" opacity=".35"/>${T(52,96,'1,2 m²',{fs:17,fw:700,a:'middle',c:'var(--air)'})}</g>`).join('')}
+       <g id="v7s" opacity="0">${T(90,300,`Diseño: 3 × 1,2 = ${f2(design)} m²`,{fs:26,fw:700,disp:1})}</g>
+       <g id="v7b" opacity="0">${T(540,150,'Requerida',{fs:16,c:'var(--muted)'})}<rect x="540" y="160" width="360" height="26" rx="5" fill="var(--ink)"/>${T(900,212,`${f2(EX.at)} m²`,{fs:16,fw:700,a:'end'})}
+         ${T(540,250,'Diseño',{fs:16,c:'var(--muted)'})}<rect x="540" y="260" width="360" height="26" rx="5" fill="var(--surface-2)"/><rect id="v7f" x="540" y="260" width="0" height="26" rx="5" fill="var(--bad)"/>
+         <line x1="720" y1="252" x2="720" y2="294" stroke="var(--ink)" stroke-width="2" stroke-dasharray="4 3"/>${T(720,312,'50 %',{fs:13,c:'var(--muted)',a:'middle'})}${T(900,312,'100 %',{fs:13,c:'var(--muted)',a:'end'})}</g>
+       <g id="v7r" opacity="0"><rect x="540" y="340" width="360" height="80" rx="10" fill="var(--warn-soft)"/>${T(560,374,`Faltan ${f2(EX.at-design)} m²`,{fs:28,fw:700,disp:1,c:'var(--warn)'})}${T(560,402,`${pct(ratio)} · Revisar con arquitectura y equipo técnico`,{fs:15,fw:600})}</g>`,
+     up:(lt,$g)=>{ for(let i=0;i<3;i++) $g('v7w'+i).setAttribute('opacity',seg(lt,.5+i*.9,1.3+i*.9)); $g('v7s').setAttribute('opacity',seg(lt,5,6));
+       $g('v7b').setAttribute('opacity',seg(lt,6,7)); $g('v7f').setAttribute('width',(360*ratio*seg(lt,6.8,9)).toFixed(1)); $g('v7r').setAttribute('opacity',seg(lt,9.5,10.5)); }},
+    {id:'v8',d:12,chap:'En la herramienta',caps:[[0,'En la herramienta: busca el espacio y escribe el área que realmente abre en el plano.'],[5,'Al instante verás cuánto falta y su estado. Si no hay vanos al exterior, márcalo para revisión técnica.'],[9,'Al terminar, guarda el PDF de tu revisión para compartirlo con el equipo.']],
+     svg:()=>`${T(480,110,'Verificar en 3 pasos',{fs:34,fw:700,disp:1,a:'middle'})}
+       ${[['Busca el espacio','por tribuna, nivel o nombre'],['Escribe lo que abre','y mira cuánto le falta'],['Guarda el PDF','y compártelo con el equipo']].map(([a,b],i)=>`<g id="v8s${i}" opacity="0" transform="translate(${110+i*260},170)"><circle cx="110" cy="70" r="54" fill="var(--accent-soft)"/>${T(110,90,i+1,{fs:58,fw:700,disp:1,c:'var(--accent)',a:'middle'})}${T(110,170,a,{fs:22,fw:700,a:'middle'})}${T(110,196,b,{fs:15,c:'var(--muted)',a:'middle'})}</g>`).join('')}`,
+     up:(lt,$g)=>{ [0,1,2].forEach(i=>$g('v8s'+i).setAttribute('opacity',seg(lt,[.4,5,9][i],[1.4,6,10][i]))); }}
+  ];
+  // Duración de cada pista de narración (audio/n01.mp3 … n24.mp3, voz es-CO-SalomeNeural)
+  const NDUR=[7.66,6.17,8.06,6.65,6.96,11.69,4.27,6.26,6.74,9.5,6.91,6.41,9.41,7.92,5.5,6.82,4.82,11.14,9.05,10.27,14.57,5.93,8.18,5.64];
+  // Re-cronometrar: cada frase ocupa al menos lo que dura su audio, y la animación se estira en ese tramo
+  let gi=0, t0=0;
+  SC.forEach(sc=>{
+    const marks=sc.caps.map(c=>c[0]); let nt=0; sc.seg=[]; sc.capsN=[];
+    marks.forEach((o0,k)=>{ const o1=k+1<marks.length?marks[k+1]:sc.d; const L=Math.max(o1-o0,(NDUR[gi]||0)+0.9);
+      sc.seg.push({n0:nt,n1:nt+L,o0,o1}); sc.capsN.push({at:nt,txt:sc.caps[k][1],i:gi,end:nt+L}); nt+=L; gi++; });
+    sc.dN=nt; sc.t0=t0; t0+=nt;
+  });
+  const TOTAL=t0;
+  const orig=(sc,lt)=>{ for(const g of sc.seg){ if(lt<=g.n1) return g.o0+(g.o1-g.o0)*C(0,1,(lt-g.n0)/(g.n1-g.n0)); } return sc.d; };
+  let built=false, t=4, started=false, playing=false, last=0, raf=0, lastIdx=-1;
+  const fmt = x=>`${Math.floor(x/60)}:${String(Math.floor(x%60)).padStart(2,'0')}`;
+  const get = id=>document.getElementById(id);
+  const AUD = new Audio(); AUD.preload='auto';
+  let voiceOn = loadPref('narr2', true);
+  let RATE = +loadPref('vidRate', 1) || 1;
+  const setRate = ()=>{ AUD.defaultPlaybackRate=RATE; AUD.playbackRate=RATE; try{ AUD.preservesPitch=true; }catch(e){} };
+  function curCap(){ for(const sc of SC){ const lt=t-sc.t0; if(lt>=-0.001 && lt<sc.dN+0.001){ let c=sc.capsN[0]; sc.capsN.forEach(x=>{ if(lt>=x.at) c=x; }); return {sc,c,lt}; } } const sc=SC[SC.length-1]; return {sc,c:sc.capsN[sc.capsN.length-1],lt:sc.dN}; }
+  function playClip(c, offset){
+    if(!voiceOn||!playing) return;
+    const src=`audio/n${String(c.i+1).padStart(2,'0')}.mp3`;
+    if(!AUD.src.endsWith(src)) AUD.src=src;
+    setRate();
+    const go=()=>{ if(offset<NDUR[c.i]-0.05){ try{ AUD.currentTime=Math.max(0,offset); }catch(e){} AUD.play().catch(()=>{}); } };
+    if(AUD.readyState>=1) go(); else AUD.addEventListener('loadedmetadata',go,{once:true});
+  }
+  function build(){
+    if(built) return; built=true;
+    get('vidSvg').innerHTML = `<rect width="960" height="540" fill="var(--bg)"/>` + SC.map(sc=>`<g id="${sc.id}" opacity="0" style="display:none">${sc.svg()}</g>`).join('') +
+      `<text x="940" y="30" text-anchor="end" font-size="13" fill="var(--muted)" font-weight="600" letter-spacing="1">VENTILACIÓN NATURAL · ESTADIO ATANASIO GIRARDOT</text>`;
+    get('vidChaps').innerHTML = SC.map((sc,i)=>`<li><button data-t="${sc.t0}">${i+1} · ${sc.chap}</button></li>`).join('');
+    get('vidBar').innerHTML = '<i id="vidFill"></i>' + SC.slice(1).map(sc=>`<b style="left:${sc.t0/TOTAL*100}%"></b>`).join('');
+    get('vidChaps').onclick = e=>{ const b=e.target.closest('[data-t]'); if(b){ seek(+b.dataset.t); if(!playing) play(); } };
+    render();
+  }
+  function render(){
+    const {sc:cur,c} = curCap();
+    SC.forEach(sc=>{ const lt=t-sc.t0, g=get(sc.id); const on = sc===cur;
+      const fade = Math.min(sc===SC[0]?1:C(0,1,lt/0.6), sc===SC[SC.length-1]?1:C(0,1,(sc.dN-lt)/0.6));
+      if(on){ g.style.display=''; g.setAttribute('opacity',fade.toFixed(2)); sc.up(orig(sc,C(0,sc.dN,lt)),get); } else g.style.display='none'; });
+    if(c.i!==lastIdx){ get('vidCap').textContent=c.txt; lastIdx=c.i; playClip(c, t-cur.t0-c.at); }
+    get('vidFill').style.width=(t/TOTAL*100)+'%'; get('vidBar').setAttribute('aria-valuenow',Math.round(t/TOTAL*100));
+    get('vidTime').textContent=`${fmt(t)} / ${fmt(TOTAL)}`;
+    get('vidChaps').querySelectorAll('button').forEach(b=>b.setAttribute('aria-current', +b.dataset.t===cur.t0));
+  }
+  function loop(now){ if(!playing) return; t=Math.min(TOTAL,t+(now-last)/1000*RATE); last=now; render(); if(t>=TOTAL){ pause(); return; } raf=requestAnimationFrame(loop); }
+  function play(){ build(); if(!started){ started=true; t=0; } if(t>=TOTAL) t=0; playing=true; last=performance.now(); lastIdx=-1; get('vidBig').hidden=true; get('vidPlay').textContent='❚❚ Pausa'; raf=requestAnimationFrame(loop); }
+  function pause(){ playing=false; cancelAnimationFrame(raf); AUD.pause(); if(get('vidPlay')) get('vidPlay').textContent= t>=TOTAL?'↺ Ver de nuevo':'▶ Reproducir'; if(t>=TOTAL){ get('vidBig').hidden=false; get('vidBig').textContent='↺ Ver de nuevo'; } }
+  function seek(x){ build(); started=true; AUD.pause(); t=C(0,TOTAL,x); lastIdx=-1; render(); }
+  get('vidPlay').onclick=()=>playing?pause():play();
+  get('vidBig').onclick=()=>play();
+  get('vidBar').onclick=e=>{ const r=e.currentTarget.getBoundingClientRect(); seek((e.clientX-r.left)/r.width*TOTAL); };
+  get('vidBar').onkeydown=e=>{ if(e.key==='ArrowRight'){ seek(t+5); e.preventDefault(); } if(e.key==='ArrowLeft'){ seek(t-5); e.preventDefault(); } };
+  get('vidVoice').checked=voiceOn;
+  get('vidRate').value=String(RATE);
+  get('vidRate').onchange=e=>{ RATE=+e.target.value||1; savePref('vidRate',RATE); setRate(); };
+  get('vidVoice').onchange=e=>{ voiceOn=e.target.checked; savePref('narr2',voiceOn); if(!voiceOn) AUD.pause(); else if(playing){ lastIdx=-1; render(); } };
+  get('vidTime').textContent=`0:00 / ${fmt(TOTAL)}`;
+  return {build,play,pause,seek,total:()=>TOTAL};
+})();
+window.__VID = VID;
+/* ---------- Estrategias por régimen: isométricos y cortes ---------- */
+const EST = (()=>{
+  const TAG = (t,x=508)=>{ const w=t.length*7.6+22; return `<g aria-hidden="true"><rect x="${x-w}" y="10" width="${w}" height="22" rx="11" fill="var(--ink)"/><text x="${x-w/2}" y="25" text-anchor="middle" font-size="11" font-weight="700" fill="var(--surface)" letter-spacing="1.2">${t}</text></g>`; };
+  const MK = `<defs>${[['air','--air'],['mec','--mec'],['hot','--accent']].map(([k,c])=>`<marker id="ah-${k}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(${c})"/></marker>`).join('')}</defs>`;
+  const COL = {air:'--air',mec:'--mec',hot:'--accent'};
+  const flowAttr = c=>`class="flow" style="stroke:var(${COL[c||'air']})" marker-end="url(#ah-${c||'air'})"`;
+  const callout = (x,y,n)=>`<g class="co" data-n="${n}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/><text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--surface)">${n}</text></g>`;
+
+  /* ---- isométrico (corte con los dos muros del fondo) ---- */
+  function ISO({W,D,H,els}){
+    const k=0.866;
+    const raw=(x,y,z,s)=>[(x-y)*k*s,(x+y)*0.5*s-z*s];
+    const s=Math.min(500/((W+D+1.6)*k), 330/((W+D+1.6)*0.5+H+1.3));
+    let mnx=1e9,mxx=-1e9,mny=1e9,mxy=-1e9;
+    for(const x of [-0.9,W+0.9]) for(const y of [-0.9,D+0.9]) for(const z of [0,H+0.9]){ const [a,b]=raw(x,y,z,s); mnx=Math.min(mnx,a); mxx=Math.max(mxx,a); mny=Math.min(mny,b); mxy=Math.max(mxy,b); }
+    const ox=260-(mnx+mxx)/2, oy=180-(mny+mxy)/2;
+    const Q=(x,y,z)=>{ const [a,b]=raw(x,y,z,s); return [ox+a,oy+b]; };
+    const pts=arr=>arr.map(p=>Q(...p).map(n=>n.toFixed(1)).join(',')).join(' ');
+    const wallPts=(w,a,b,z0,z1)=>({L:[[0,a,z0],[0,b,z0],[0,b,z1],[0,a,z1]],R:[[a,0,z0],[b,0,z0],[b,0,z1],[a,0,z1]],F:[[W,a,z0],[W,b,z0],[W,b,z1],[W,a,z1]],B:[[a,D,z0],[b,D,z0],[b,D,z1],[a,D,z1]]})[w];
+    const lerp=(p,q,t)=>p.map((v,i)=>v+(q[i]-v)*t);
+    let g=`<polygon points="${pts([[0,0,0],[W,0,0],[W,D,0],[0,D,0]])}" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.2"/>`;
+    g+=`<polygon points="${pts([[0,0,0],[0,D,0],[0,D,H],[0,0,H]])}" fill="color-mix(in srgb,var(--surface-2) 70%,var(--ink))" fill-opacity=".35" stroke="var(--ink)" stroke-width="1.5"/>`;
+    g+=`<polygon points="${pts([[0,0,0],[W,0,0],[W,0,H],[0,0,H]])}" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>`;
+    let top='', calls='';
+    for(const e of els){
+      if(e.t==='open'){
+        const P4=wallPts(e.w,e.a,e.b,e.z0,e.z1), ghost=(e.w==='F'||e.w==='B');
+        const dash=ghost?' stroke-dasharray="5 4"':'';
+        if(e.k==='window'){ g+=`<polygon points="${pts(P4)}" fill="var(--air)" fill-opacity=".22" stroke="var(--ink)" stroke-width="1.6"${dash}/>`;
+          const m0=lerp(P4[0],P4[1],.5), m1=lerp(P4[3],P4[2],.5); g+=`<polyline points="${pts([m0,m1])}" stroke="var(--ink)" stroke-width="1.2"${dash}/>`; }
+        else if(e.k==='grille'){ g+=`<polygon points="${pts(P4)}" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.6"${dash}/>`;
+          for(let i=1;i<5;i++){ const t=i/5; g+=`<polyline points="${pts([lerp(P4[0],P4[3],t),lerp(P4[1],P4[2],t)])}" stroke="var(--ink)" stroke-width="1"/>`; } }
+        else if(e.k==='door'){ g+=`<polygon points="${pts(P4)}" fill="var(--surface-2)" fill-opacity=".6" stroke="var(--ink)" stroke-width="1.4"${dash}/>`; }
+        else { g+=`<polygon points="${pts(P4)}" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.2"${dash}/>`; }
+      }
+      else if(e.t==='ghost'){ const P4=wallPts(e.w,0,e.w==='F'?D:W,0,H); top+=`<polygon points="${pts(P4)}" fill="none" stroke="var(--muted)" stroke-width="1" stroke-dasharray="5 4"/>`; }
+      else if(e.t==='ceil'){ top+=`<polygon points="${pts([[0,0,H],[W,0,H],[W,D,H],[0,D,H]])}" fill="${e.fill?'var(--surface-2)':'none'}" fill-opacity=".35" stroke="var(--muted)" stroke-width="1" stroke-dasharray="${e.fill?'0':'5 4'}"/>`; }
+      else if(e.t==='box'){ const {x,y,z,w,d,h}=e; const f=e.fill||'var(--surface-2)';
+        g+=`<polygon points="${pts([[x+w,y,z],[x+w,y+d,z],[x+w,y+d,z+h],[x+w,y,z+h]])}" fill="${f}" stroke="var(--ink)" stroke-width="1.1"/>`;
+        g+=`<polygon points="${pts([[x,y+d,z],[x+w,y+d,z],[x+w,y+d,z+h],[x,y+d,z+h]])}" fill="${f}" fill-opacity=".8" stroke="var(--ink)" stroke-width="1.1"/>`;
+        g+=`<polygon points="${pts([[x,y,z+h],[x+w,y,z+h],[x+w,y+d,z+h],[x,y+d,z+h]])}" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.1"/>`; }
+      else if(e.t==='fan'){ const pc=[]; for(let i=0;i<16;i++){ const a=i/16*Math.PI*2, u=e.a+Math.cos(a)*e.r, z=e.z+Math.sin(a)*e.r; pc.push(e.w==='L'?[0,u,z]:[u,0,z]); }
+        const c=e.w==='L'?[0,e.a,e.z]:[e.a,0,e.z];
+        g+=`<polygon points="${pts(pc)}" fill="var(--mec-soft)" stroke="var(--mec)" stroke-width="2"/>`;
+        g+=`<polyline points="${pts([pc[2],pc[10]])}" stroke="var(--mec)" stroke-width="1.6"/><polyline points="${pts([pc[6],pc[14]])}" stroke="var(--mec)" stroke-width="1.6"/>`;
+        void c; }
+      else if(e.t==='flow'){ top+=`<polyline points="${pts(e.p)}" fill="none" ${flowAttr(e.c)} stroke-width="3" stroke-linejoin="round"/>`; }
+      else if(e.t==='lab'){ const [x,y]=Q(...e.p); top+=`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="11.5" font-weight="700" fill="var(--ink)" stroke="var(--bg)" stroke-width="4" paint-order="stroke" stroke-linejoin="round" text-anchor="${e.a||'middle'}" letter-spacing=".5">${e.txt}</text>`; }
+      else if(e.t==='n'){ const [x,y]=Q(...e.p); calls+=callout(x,y,e.n); }
+    }
+    return `<svg viewBox="0 0 520 360" role="img">${MK}${g}${top}${calls}${TAG('ISOMÉTRICO')}</svg>`;
+  }
+
+  /* ---- corte 2D ---- */
+  const L=110,R=410,T=70,B=232;
+  const wall=(x,gaps=[])=>{ let y=T,s=''; [...gaps].sort((a,b)=>a[0]-b[0]).forEach(([a,b])=>{ s+=`<line x1="${x}" y1="${y}" x2="${x}" y2="${a}"/>`; y=b; }); return s+`<line x1="${x}" y1="${y}" x2="${x}" y2="${B}"/>`; };
+  const roof=(gaps=[])=>{ let x=L-3,s=''; [...gaps].sort((a,b)=>a[0]-b[0]).forEach(([a,b])=>{ s+=`<line x1="${x}" y1="${T}" x2="${a}" y2="${T}"/>`; x=b; }); return s+`<line x1="${x}" y1="${T}" x2="${R+3}" y2="${T}"/>`; };
+  const grilleV=(x,a,b)=>{ let s=`<rect x="${x-4}" y="${a}" width="8" height="${b-a}" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1"/>`; for(let y=a+5;y<b;y+=7) s+=`<line x1="${x-7}" y1="${y+3}" x2="${x+7}" y2="${y-3}" stroke="var(--ink)" stroke-width="1.4"/>`; return s; };
+  const glass=(x,a,b)=>`<line x1="${x}" y1="${a}" x2="${x}" y2="${b}" stroke="var(--air)" stroke-width="5" opacity=".55"/>`;
+  const fan=(x,y,r=13)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--mec-soft)" stroke="var(--mec)" stroke-width="2.5"/><path d="M${x-r*.7},${y-r*.7}L${x+r*.7},${y+r*.7}M${x+r*.7},${y-r*.7}L${x-r*.7},${y+r*.7}" stroke="var(--mec)" stroke-width="2"/>`;
+  const fl=(d,c)=>`<path d="${d}" fill="none" ${flowAttr(c)} stroke-width="3" stroke-linecap="round"/>`;
+  const lb=(x,y,t,a='middle',c='var(--muted)')=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="11.5" font-weight="700" fill="${c}" stroke="var(--surface)" stroke-width="3" paint-order="stroke" stroke-linejoin="round" letter-spacing=".4">${t}</text>`;
+  const sign=(x,y,t,c)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="30" font-weight="700" fill="var(${c})">${t}</text>`;
+  const SEC=(inner,{walls='',outsideL='EXTERIOR',outsideR=''}={})=>`<svg viewBox="0 0 520 300" role="img">${MK}
+      <rect x="${L}" y="${T}" width="${R-L}" height="${B-T}" fill="var(--surface)"/>
+      <g stroke="var(--ink)" stroke-width="5" stroke-linecap="square">${walls}<line x1="30" y1="${B}" x2="490" y2="${B}"/></g>
+      ${outsideL?lb(22,B+22,outsideL,'start'):''}${outsideR?lb(500,B+22,outsideR,'end'):''}${inner}${TAG('SECCIÓN')}</svg>`;
+  const plan=(inner)=>`<svg viewBox="0 0 520 300" role="img">${MK}${inner}${TAG('PLANTA')}</svg>`;
+
+  const RG = {
+   R1:{
+    iso:()=>ISO({W:9,D:3.2,H:3.4,els:[
+      {t:'open',w:'R',a:.5,b:2.7,z0:0,z1:3.4,k:'void'},{t:'open',w:'R',a:3.4,b:5.6,z0:0,z1:3.4,k:'void'},{t:'open',w:'R',a:6.3,b:8.5,z0:0,z1:3.4,k:'void'},
+      {t:'ceil',fill:true},{t:'ghost',w:'B'},{t:'open',w:'B',a:3.6,b:5.4,z0:1,z1:2.2,k:'window'},
+      {t:'flow',p:[[1.6,-2.2,1.5],[1.6,4.6,1.5]]},{t:'flow',p:[[7.4,-2.2,1.8],[7.4,4.6,1.8]]},{t:'flow',p:[[4.5,-2.2,1.6],[4.5,2.2,1.6],[4.5,3.2,1.6]]},
+      {t:'lab',p:[4.5,-1.6,3.8],txt:'BRISA'},{t:'lab',p:[4.5,4.4,-0.3],txt:'RECINTOS VECINOS'},
+      {t:'n',p:[1.6,0,3.0],n:1},{t:'n',p:[4.5,3.2,2.6],n:2},{t:'n',p:[7.4,1.6,3.6],n:3}]}),
+    secs:[
+      {name:'Circulación abierta',when:'Hall principal, accesos y circulaciones',txt:'La brisa atraviesa la circulación de lado a lado. Por su condición abierta ya está ventilada.',
+       svg:()=>SEC(`${fl('M20,130 L500,130')}${fl('M20,175 L500,175')}<rect x="${L-6}" y="${T}" width="12" height="${B-T}" fill="var(--surface-2)" stroke="var(--ink)"/><rect x="${R-6}" y="${T}" width="12" height="${B-T}" fill="var(--surface-2)" stroke="var(--ink)"/>${lb(260,105,'CIRCULACIÓN ABIERTA · R1')}`,{walls:roof(),outsideR:'RECINTOS'})},
+      {name:'Si se cierra con vidrio',when:'Fan zones y halls de galería',txt:'Las fan zones y los halls de galería que se cierran con paneles de vidrio pasan a R2: necesitan vanos operables.',
+       svg:()=>SEC(`${glass(L,T,150)}${glass(L,195,B)}${glass(R,105,B)}${fl('M20,172 L110,172 C220,172 300,90 410,88 L500,88')}${lb(260,205,'PANELES DE VIDRIO + VANOS OPERABLES')}`,{walls:roof()+`<line x1="${L}" y1="150" x2="${L}" y2="150"/>`})},
+      {name:'Recintos que abren a la circulación',when:'Recintos sin fachada propia junto a circulaciones abiertas',txt:'Un recinto ocupado puede tomar el aire de la circulación abierta y sacarlo por un vano alto.',
+       svg:()=>SEC(`${fl('M15,160 L250,160 C290,160 330,150 360,120 C380,100 395,95 410,95 L505,95')}${glass(260,128,180)}${lb(185,100,'CIRCULACIÓN')}${lb(335,215,'RECINTO R2')}`,{walls:roof()+wall(260,[[128,180]])+wall(R,[[82,110]]),outsideR:'EXTERIOR'})},
+      {name:'Protección de lluvia',when:'Frente a la fachada principal del estadio (sobre todo Oriental)',txt:'Un voladizo o alero sobre la abertura protege de la lluvia impulsada por la brisa sin cerrar el paso del aire.',
+       svg:()=>SEC(`<line x1="${L-70}" y1="${T}" x2="${L}" y2="${T}" stroke="var(--ink)" stroke-width="6"/>${[0,1,2,3,4].map(i=>`<line x1="${20+i*16}" y1="20" x2="${8+i*16}" y2="60" stroke="var(--air)" stroke-width="2" opacity=".6"/>`).join('')}${fl('M15,160 L500,160')}${fl('M15,200 L500,200')}${lb(L-35,T-10,'VOLADIZO')}${lb(60,14,'LLUVIA')}`,{walls:roof(),outsideR:'RECINTOS'})}],
+    list:[['Ya está ventilado','Por la condición abierta del estadio, el hall, los accesos y las circulaciones no requieren aberturas adicionales. El área calculada es solo referencial.'],
+      ['Sirve como espacio abierto para los recintos vecinos','Los recintos ocupados pueden abrir sus vanos hacia la circulación cuando no llegan a fachada.'],
+      ['Mantener la permeabilidad','Si se cierra con paneles de vidrio, como las fan zones y los halls de galería, pasa a ser un recinto ocupado (R2) y necesita vanos operables.']],
+    verify:'Normalmente no se verifica. Si el espacio se cierra, cámbialo mentalmente a R2 y compara su área con la requerida.',
+    docs:[['inf',13,'Regímenes, pág. 13'],['inf',14,'Criterios, pág. 14']]},
+   R2:{
+    iso:()=>ISO({W:6,D:5,H:3.2,els:[
+      {t:'open',w:'L',a:1.4,b:3.6,z0:.9,z1:2.2,k:'window'},{t:'box',x:-.9,y:1.2,z:2.35,w:.9,d:2.6,h:.12},
+      {t:'ghost',w:'F'},{t:'open',w:'F',a:1.6,b:3.4,z0:1.6,z1:2.7,k:'window'},{t:'box',x:2.2,y:1.8,z:0,w:1.6,d:1,h:.75},
+      {t:'flow',p:[[-2.4,2.5,1.5],[0,2.5,1.5],[3,2.6,1.6],[6,2.5,2.1],[7.6,2.5,2.3]]},
+      {t:'lab',p:[-1.6,2.5,3.2],txt:'FACHADA EXTERIOR'},
+      {t:'n',p:[0,2.5,1.75],n:1},{t:'n',p:[6,2.5,3.1],n:2},{t:'n',p:[-.5,2.5,2.75],n:3}]}),
+    secs:[
+      {name:'Ventilación cruzada',when:'Oriental (barlovento), Norte y Sur',txt:'Entrada en una fachada y salida en la opuesta. Ideal en la Oriental (barlovento) y en Norte y Sur.',
+       svg:()=>SEC(`${fl('M15,165 L110,165 C220,165 300,108 410,106 L505,106')}<line x1="${L-46}" y1="133" x2="${L}" y2="133" stroke="var(--ink)" stroke-width="5"/>${lb(L-26,124,'ALERO')}`,{walls:roof()+wall(L,[[140,190]])+wall(R,[[88,125]]),outsideR:'EXTERIOR O ESPACIO ABIERTO'})},
+      {name:'Efecto chimenea (Occidental)',when:'Occidental (sotavento)',txt:'En sotavento no conviene depender del viento: abertura baja de entrada y alta de salida, conectada al anillo de circulación abierto.',
+       svg:()=>SEC(`${fl('M15,205 L110,205 C230,205 330,190 360,140 C380,110 395,92 410,90 L505,90','air')}${lb(215,150,'EL AIRE CALIENTE SUBE')}`,{walls:roof()+wall(L,[[180,222]])+wall(R,[[78,108]]),outsideR:'ANILLO DE CIRCULACIÓN'})},
+      {name:'Aletas en fachada paralela',when:'Norte y Sur',txt:'Norte y Sur: la brisa pasa paralela a la fachada. Una aleta o quiebravientos vertical la desvía hacia el vano. Vista en planta.',
+       svg:()=>plan(`<line x1="30" y1="200" x2="215" y2="200" stroke="var(--ink)" stroke-width="6"/><line x1="300" y1="200" x2="490" y2="200" stroke="var(--ink)" stroke-width="6"/>
+         <line x1="215" y1="200" x2="300" y2="200" stroke="var(--air)" stroke-width="6" opacity=".5"/><line x1="304" y1="200" x2="270" y2="110" stroke="var(--accent)" stroke-width="7" stroke-linecap="round"/>
+         ${fl('M500,80 L120,80')}${fl('M500,130 L330,130 C300,130 275,160 258,250','air')}${fl('M500,160 L345,160 C320,160 300,190 288,250','air')}
+         ${lb(395,64,'BRISA PARALELA A LA FACHADA')}${lb(330,108,'ALETA','start','var(--accent)')}${lb(258,272,'RECINTO')}${lb(100,222,'FACHADA (PLANTA)')}`)},
+      {name:'Dos vanos en la misma fachada',when:'Recintos con una sola fachada',txt:'Uno inferior para la entrada y otro superior para la salida. Es la segunda opción cuando no hay fachada opuesta.',
+       svg:()=>SEC(`${fl('M15,205 L110,205 C230,205 300,185 300,150 C300,110 230,95 110,95 L15,95')}${lb(36,190,'ENTRADA','start')}${lb(36,82,'SALIDA','start')}`,{walls:roof()+wall(L,[[80,110],[188,222]])+wall(R)})},
+      {name:'Lamas a contraviento',when:'Oriental, recintos frente a la fachada principal',txt:'Rejilla de lamas inclinadas contra el viento y alero: deja pasar el aire y frena la lluvia impulsada por la brisa.',
+       svg:()=>SEC(`${grilleV(L,140,200)}<line x1="${L-46}" y1="133" x2="${L}" y2="133" stroke="var(--ink)" stroke-width="5"/>${[0,1,2,3].map(i=>`<line x1="${22+i*14}" y1="95" x2="${10+i*14}" y2="135" stroke="var(--air)" stroke-width="2" opacity=".6"/>`).join('')}${fl('M15,172 L110,172 C220,172 300,110 410,108 L505,108')}${lb(L-24,124,'ALERO')}${lb(L+12,215,'LAMAS','start')}`,{walls:roof()+wall(L,[[140,200]])+wall(R,[[90,125]])})},
+      {name:'Hacia circulación abierta',when:'Recintos interiores con frente a una circulación abierta',txt:'Sin fachada exterior, el recinto puede abrir dos vanos hacia la circulación abierta: uno bajo y otro alto.',
+       svg:()=>SEC(`${fl('M505,208 L410,208 C300,208 220,190 220,150 C220,110 300,96 410,96 L505,96')}`,{walls:roof()+wall(L)+wall(R,[[82,110],[192,222]]),outsideL:'SIN FACHADA',outsideR:'CIRCULACIÓN ABIERTA'})},
+      {name:'Aire acondicionado + ventana de respaldo',when:'Tiendas tipo 1 y recintos que se climaticen',txt:'Si se climatiza, el aire de renovación lo asegura el sistema mecánico, pero se conserva una ventana corrediza o rejilla operable por si el sistema falla.',
+       svg:()=>SEC(`<rect x="${R-70}" y="${T+8}" width="62" height="30" rx="4" fill="var(--mec-soft)" stroke="var(--mec)" stroke-width="2"/>${fl(`M${R-70},${T+30} C280,${T+40} 200,120 200,200`,'mec')}<line x1="${L}" y1="140" x2="${L}" y2="190" stroke="var(--air)" stroke-width="5" stroke-dasharray="6 4"/>${lb(L+10,130,'VENTANA OPERABLE DE RESPALDO','start')}${lb(R-40,T+56,'EQUIPO','middle','var(--mec)')}`,{walls:roof()+wall(L,[[140,190]])+wall(R)})}],
+    list:[['Ventana operable de entrada','Vanos operables, por ejemplo ventanas corredizas, hacia fachada exterior o espacio abierto. Cuenta solo la parte que abre.'],
+      ['Salida en la fachada opuesta o más alta','Ventilación cruzada o efecto chimenea según la tribuna: cruzada en Oriental, Norte y Sur; baja-alta en Occidental.'],
+      ['Protección de lluvia','Frente a la fachada principal del estadio: aleros y rejillas con lamas a contraviento (2.119 mm de lluvia al año).'],
+      ['Vanos regulables','Las noches son frescas (16,6 °C de mínima media): los vanos deben poder modularse para evitar corrientes frías.'],
+      ['Sin fachada: aire acondicionado o ventilación mecánica','Y aun así conservar ventanas corredizas o rejillas operables para ventilar si el sistema falla.']],
+    verify:'Suma el área que realmente abre en las ventanas del recinto y escríbela en la ficha del espacio.',
+    docs:[['inf',13,'Regímenes, pág. 13'],['inf',32,'Recomendaciones, pág. 32'],['ppt',2,'Lámina 2']]},
+   R3:{
+    iso:()=>ISO({W:4,D:3.2,H:3,els:[
+      {t:'open',w:'L',a:.8,b:2.4,z0:2.05,z1:2.65,k:'grille'},{t:'fan',w:'R',a:3.2,z:2.45,r:.32},
+      {t:'box',x:.4,y:0,z:.75,w:2.2,d:.55,h:.12},{t:'ghost',w:'B'},{t:'open',w:'B',a:.7,b:1.6,z0:0,z1:2.1,k:'door'},{t:'open',w:'B',a:.8,b:1.5,z0:.1,z1:.4,k:'grille'},
+      {t:'flow',p:[[1.15,4.6,.3],[1.15,3.2,.3],[1.8,1.8,1.2],[1.6,.4,2.35],[0,1.6,2.35],[-1.8,1.6,2.5]]},
+      {t:'flow',p:[[2.2,2.2,.9],[3,1,1.9],[3.2,0,2.45],[3.2,-1.5,2.6]],c:'mec'},
+      {t:'n',p:[0,1.6,2.95],n:1},{t:'n',p:[3.2,0,3.0],n:2},{t:'n',p:[1.15,3.2,.75],n:3}]}),
+    secs:[
+      {name:'Abertura ≥ 100 %',when:'Abertura del diseño igual o mayor a la requerida',txt:'La rejilla del diseño alcanza la requerida: ventilación natural con rejilla de lamas y protección visual.',
+       svg:()=>SEC(`${grilleV(L,90,135)}${fl('M400,212 C330,212 250,190 200,150 C170,125 140,112 110,112 L15,112')}${lb(L+40,82,'REJILLA CON LAMAS','start')}${lb(R-40,200,'REPOSICIÓN','end')}`,{walls:roof()+wall(L,[[90,135]])+wall(R,[[198,226]]),outsideR:'CIRCULACIÓN'})},
+      {name:'Entre 50 y 100 %',when:'Abertura entre el 50 y el 100 %',txt:'Ventilación natural con extracción mecánica de baja potencia, activada por ocupación o por horario de eventos.',
+       svg:()=>SEC(`${grilleV(L,90,125)}${fan(L,160)}${fl('M400,212 C330,212 250,190 200,150 C170,125 140,108 110,108 L15,108')}${fl('M300,200 C240,190 180,170 126,160 L40,160','mec')}${lb(L+24,186,'EXTRACTOR DE APOYO','start','var(--mec)')}`,{walls:roof()+wall(L,[[90,125],[148,172]])+wall(R,[[198,226]]),outsideR:'CIRCULACIÓN'})},
+      {name:'< 50 % o sin fachada',when:'Abertura menor al 50 % o baño sin fachada',txt:'Extracción mecánica como sistema principal. El aire de reposición entra por la rejilla de la puerta o por inyección.',
+       svg:()=>SEC(`${fan(260,T+16)}<rect x="248" y="18" width="24" height="${T-18}" fill="var(--mec-soft)" stroke="var(--mec)" stroke-width="2"/>${fl('M400,212 C330,212 280,170 262,110 L262,20','mec')}${lb(290,40,'DUCTO A CUBIERTA','start','var(--mec)')}${grilleV(R,198,226)}${lb(R-40,200,'REJILLA EN PUERTA','end')}`,{walls:roof([[248,272]])+wall(L)+wall(R,[[198,226]]),outsideL:'SIN FACHADA',outsideR:'CIRCULACIÓN'})},
+      {name:'Rejilla baja y alta',when:'Baños con una sola fachada',txt:'Dos rejillas permanentes en la misma fachada: el aire entra por la baja y sale por la alta.',
+       svg:()=>SEC(`${grilleV(L,190,222)}${grilleV(L,84,116)}${fl('M15,206 L110,206 C220,206 280,180 280,150 C280,110 220,100 110,100 L15,100')}`,{walls:roof()+wall(L,[[84,116],[190,222]])+wall(R)})},
+      {name:'Dentro de un espacio climatizado',when:'Baños rodeados de espacios con aire acondicionado',txt:'Necesariamente con extracción mecánica: el aire de reposición llega del espacio climatizado y sale por ducto.',
+       svg:()=>SEC(`<rect x="250" y="${T}" width="${R-250}" height="${B-T}" fill="var(--mec-soft)" opacity=".5"/><line x1="250" y1="${T}" x2="250" y2="200" stroke="var(--ink)" stroke-width="4"/>${fan(330,T+16)}<rect x="318" y="18" width="24" height="${T-18}" fill="var(--mec-soft)" stroke="var(--mec)" stroke-width="2"/>${fl('M180,212 L250,212 C300,212 330,170 330,110 L330,20','mec')}${lb(180,96,'ESPACIO')}${lb(180,111,'CLIMATIZADO')}${lb(330,150,'BAÑO')}${lb(360,40,'EXTRACCIÓN','start','var(--mec)')}`,{walls:roof([[318,342]])+wall(L)+wall(R),outsideL:'',outsideR:''})},
+      {name:'Duchas y jacuzzis',when:'Sótano: camerinos, duchas y jacuzzis',txt:'La carga de vapor exige extracción. Se calcularon con 25 renovaciones por hora.',
+       svg:()=>SEC(`${[170,210,250,290].map(x=>`<path d="M${x},215 q8,-14 0,-28 q-8,-14 0,-28" fill="none" stroke="var(--accent)" stroke-width="2.5" opacity=".8"/>`).join('')}${fan(250,T+16)}<rect x="238" y="18" width="24" height="${T-18}" fill="var(--mec-soft)" stroke="var(--mec)" stroke-width="2"/>${fl('M250,150 L250,20','mec')}${grilleV(R,196,226)}${lb(230,232-6-34,'VAPOR','middle','var(--accent)')}${lb(R-40,200,'REPOSICIÓN','end')}`,{walls:roof([[238,262]])+wall(L)+wall(R,[[196,226]]),outsideL:'SIN FACHADA (SÓTANO)',outsideR:'CIRCULACIÓN'})}],
+    list:[['Rejilla permanente con lamas','En todos los baños, con protección visual, para que el aire circule siempre, aunque tenga apoyo mecánico.'],
+      ['Extractor según la verificación','Entre 50 y 100 %: extracción de baja potencia por ocupación u horario. Menos de 50 % o sin fachada: extracción como sistema principal.'],
+      ['Aire de reposición','Por la abertura natural, una rejilla en la puerta o inyección.'],
+      ['Baños dentro de espacios climatizados','Necesariamente llevan extracción mecánica.']],
+    verify:'Escribe el área libre de la rejilla o ventana. La herramienta te dice si cumple, si necesita apoyo o si la extracción es principal.',
+    docs:[['inf',29,'Baños, pág. 29'],['ppt',2,'Lámina 2']]},
+   R4:{
+    iso:()=>ISO({W:6,D:5,H:3.5,els:[
+      {t:'box',x:.8,y:0,z:0,w:4.2,d:.8,h:.9},{t:'box',x:.6,y:0,z:2.1,w:4.6,d:1.2,h:.45,fill:'var(--surface-2)'},{t:'box',x:2.6,y:.25,z:2.55,w:.7,d:.6,h:2.3,fill:'var(--accent-soft)'},
+      {t:'open',w:'L',a:2,b:4,z0:.4,z1:1.2,k:'grille'},{t:'ghost',w:'B'},{t:'open',w:'B',a:2.2,b:3.2,z0:0,z1:2.1,k:'door'},
+      {t:'flow',p:[[-2,3,.8],[0,3,.8],[2,2.2,1.2],[2.95,.9,1.9]]},{t:'flow',p:[[2.7,6.8,1.1],[2.7,5,1.1],[2.9,2.4,1.5],[2.95,1,1.95]]},
+      {t:'flow',p:[[2.95,.55,2.2],[2.95,.55,5.4]],c:'hot'},
+      {t:'lab',p:[2.95,.55,5.8],txt:'DESCARGA EN CUBIERTA'},
+      {t:'n',p:[1.2,.6,2.75],n:1},{t:'n',p:[3.5,.55,4.6],n:2},{t:'n',p:[0,3,1.6],n:3},{t:'n',p:[2.7,5,2.5],n:4}]}),
+    secs:[
+      {name:'Campana y reposición natural',when:'Cocinas con fachada o cubierta',txt:'La campana capta en la fuente; las aberturas calculadas sirven como aire de reposición, con rejilla y malla.',
+       svg:()=>SEC(`<path d="M300,118 L400,118 L410,140 L290,140 Z" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2"/><rect x="335" y="12" width="30" height="106" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="2"/><rect x="290" y="200" width="120" height="32" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/>
+         ${grilleV(L,170,215)}${fl('M15,192 L110,192 C200,192 300,190 340,150')}${fl('M350,150 L350,16','hot')}${lb(300,108,'CAMPANA','end')}${lb(375,56,'DESCARGA','start','var(--accent)')}${lb(L+12,165,'REJILLA + MALLA','start')}`,{walls:roof([[335,365]])+wall(L,[[170,215]])+wall(R)})},
+      {name:'Reposición mecánica',when:'Cocinas sin fachada',txt:'Si la cocina no llega a fachada, la reposición se hace por inyección mecánica.',
+       svg:()=>SEC(`<path d="M300,118 L400,118 L410,140 L290,140 Z" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2"/><rect x="335" y="12" width="30" height="106" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="2"/>
+         <rect x="150" y="12" width="26" height="70" fill="var(--mec-soft)" stroke="var(--mec)" stroke-width="2"/>${fan(163,88,12)}${fl('M163,20 L163,170 C163,200 250,200 330,152','mec')}${fl('M350,150 L350,16','hot')}${lb(185,40,'INYECCIÓN','start','var(--mec)')}`,{walls:roof([[150,176],[335,365]])+wall(L)+wall(R),outsideL:'SIN FACHADA'})},
+      {name:'Cocina en depresión',when:'Todas las cocinas y locales con cocción',txt:'La cocina trabaja con presión negativa: el aire fluye siempre hacia ella y no hacia las tribunas. Vista en planta.',
+       svg:()=>plan(`<rect x="170" y="70" width="180" height="150" fill="var(--surface)" stroke="var(--ink)" stroke-width="5"/>${sign(260,160,'−','--bad')}${lb(260,190,'COCINA')}
+         ${fl('M260,280 L260,226')}${fl('M70,145 L162,145')}${fl('M450,145 L358,145')}${lb(260,295,'CIRCULACIÓN')}${lb(70,130,'TRIBUNA')}${lb(450,130,'LOCAL VECINO')}${sign(70,180,'+','--ok')}${sign(450,180,'+','--ok')}`)},
+      {name:'Local comercial tipo 3 o 4',when:'Locales con gas, horno o freidora, y los BarBeer',txt:'Campana compacta sobre los equipos y ducto propio. El aire de reposición entra por el frente abierto a la circulación.',
+       svg:()=>SEC(`<path d="M150,120 L250,120 L260,140 L140,140 Z" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2"/><rect x="185" y="12" width="30" height="108" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="2"/><rect x="140" y="200" width="120" height="32" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/><rect x="330" y="186" width="80" height="46" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/>
+         ${fl('M505,160 L410,160 C330,160 260,165 210,145')}${fl('M200,140 L200,16','hot')}${lb(370,180,'MOSTRADOR')}${lb(150,110,'CAMPANA','end')}`,{walls:roof([[185,215]])+wall(L)+wall(R,[[100,180]]),outsideL:'',outsideR:'CIRCULACIÓN'})},
+      {name:'Descarga a sotavento',when:'Cuando no hay salida por cubierta',txt:'El ducto sale por una fachada a sotavento (Occidental), lejos de tomas de aire, accesos y graderías, para que la brisa disperse los efluentes.',
+       svg:()=>SEC(`<path d="M150,128 L250,128 L260,148 L140,148 Z" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2"/><path d="M185,128 L185,92 L470,92 L470,120 L215,120 L215,128" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="2"/>
+         ${fl('M200,150 L200,106 L500,106','hot')}${lb(400,170,'SALIDA EN FACHADA A SOTAVENTO','end','var(--accent)')}${lb(400,188,'LEJOS DE TOMAS Y GRADERÍAS','end')}`,{walls:roof()+wall(L)+wall(R,[[90,122]]),outsideL:'',outsideR:'OCCIDENTAL'})},
+      {name:'Cocina central: sistema propio',when:'Cocina central de la tribuna Sur (502 m²)',txt:'Extracción y reposición mecánica propias. Si el recinto se climatiza, conviene la recuperación de calor entre el aire que sale y el que entra.',
+       svg:()=>SEC(`<path d="M300,118 L400,118 L410,140 L290,140 Z" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2"/><rect x="335" y="34" width="30" height="84" fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="2"/><rect x="150" y="34" width="26" height="70" fill="var(--mec-soft)" stroke="var(--mec)" stroke-width="2"/>
+         <rect x="190" y="6" width="140" height="30" rx="4" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2"/>${lb(260,26,'RECUPERADOR DE CALOR')}
+         ${fl('M350,150 L350,46','hot')}${fl('M163,46 L163,180 C163,205 250,200 330,152','mec')}${lb(140,190,'INYECCIÓN','end','var(--mec)')}`,{walls:roof([[150,176],[335,365]])+wall(L)+wall(R),outsideL:'',outsideR:''})}],
+    list:[['Campana sobre los equipos de cocción','Dimensionada por la ingeniería mecánica según la carga de los equipos (ASHRAE 154, NFPA 96), con filtros de grasa y ductos independientes.'],
+      ['Descarga lejos de la gente','En cubierta o en fachadas a sotavento (Occidental), lejos de tomas de aire, accesos y graderías.'],
+      ['Aire de reposición','Las aberturas calculadas pueden aportar del 80 al 90 % del caudal extraído, con rejilla y malla. Si no llegan a fachada: inyección.'],
+      ['Depresión controlada','El aire fluye siempre hacia la cocina y no hacia las tribunas ni los recintos vecinos.']],
+    verify:'La extracción es obligatoria aunque se cumpla el área. Verifica la abertura como aire de reposición.',
+    docs:[['inf',27,'Cocinas, pág. 27'],['inf',28,'Recomendaciones, pág. 28'],['ppt',3,'Lámina 3']]},
+   R5:{
+    iso:()=>ISO({W:4.5,D:3.5,H:3,els:[
+      {t:'box',x:.5,y:0,z:0,w:3.4,d:.6,h:2.1},{t:'open',w:'L',a:1,b:2.4,z0:.2,z1:.6,k:'grille'},{t:'open',w:'L',a:1,b:2.4,z0:2.2,z1:2.65,k:'grille'},
+      {t:'flow',p:[[-1.8,1.7,.4],[0,1.7,.4],[2,2.2,1.1],[2.2,2,2],[0,1.7,2.42],[-1.8,1.7,2.6]]},
+      {t:'n',p:[0,1.7,.95],n:1},{t:'n',p:[0,1.7,3.05],n:2}]}),
+    secs:[
+      {name:'Bodegas, aseo y lavandería',when:'Bodegas, aseo y lockers',txt:'Rejillas de ventilación permanente: una baja de entrada y una alta de salida.',
+       svg:()=>SEC(`${grilleV(L,190,222)}${grilleV(R,80,112)}${fl('M15,206 L110,206 C240,206 320,150 410,96 L505,96')}`,{walls:roof()+wall(L,[[190,222]])+wall(R,[[80,112]]),outsideR:'EXTERIOR O CIRCULACIÓN'})},
+      {name:'Cuarto de residuos en depresión',when:'Cuartos de residuos',txt:'Extracción para que el cuarto quede en depresión: los olores no salen hacia los espacios vecinos.',
+       svg:()=>SEC(`${fan(260,T+16)}<rect x="248" y="18" width="24" height="${T-18}" fill="var(--mec-soft)" stroke="var(--mec)" stroke-width="2"/>${fl('M505,210 L410,210 C330,210 280,170 262,110 L262,20','mec')}${grilleV(R,196,226)}${sign(200,170,'−','--bad')}${sign(470,170,'+','--ok')}`,{walls:roof([[248,272]])+wall(L)+wall(R,[[196,226]]),outsideL:'',outsideR:'CIRCULACIÓN'})},
+      {name:'Bodega interior hacia circulación',when:'Bodegas sin fachada junto a circulaciones',txt:'Rejilla baja en la puerta y rejilla alta hacia la circulación abierta.',
+       svg:()=>SEC(`${grilleV(R,196,226)}${grilleV(R,84,112)}${fl('M505,211 L410,211 C300,211 240,180 240,150 C240,110 300,98 410,98 L505,98')}${lb(R-40,190,'REJILLA EN PUERTA','end')}`,{walls:roof()+wall(L)+wall(R,[[84,112],[196,226]]),outsideL:'SIN FACHADA',outsideR:'CIRCULACIÓN'})},
+      {name:'Aseo y lavandería con humedad',when:'Cuartos de aseo y lavandería',txt:'Rejilla permanente y, si el uso genera mucha humedad, un extractor de apoyo en la parte alta.',
+       svg:()=>SEC(`${grilleV(L,190,222)}${fan(R,98)}${[200,240,280].map(x=>`<path d="M${x},215 q8,-14 0,-28 q-8,-14 0,-28" fill="none" stroke="var(--accent)" stroke-width="2.5" opacity=".7"/>`).join('')}${fl('M15,206 L110,206 C240,206 330,120 395,100 L500,98','mec')}${lb(240,150,'HUMEDAD','middle','var(--accent)')}`,{walls:roof()+wall(L,[[190,222]])+wall(R,[[84,112]])})}],
+    list:[['Rejilla baja de entrada','Ventilación permanente, aunque el recinto tenga apoyo mecánico.'],
+      ['Rejilla alta de salida','El aire caliente y la humedad salen por arriba.'],
+      ['Residuos en depresión','Los cuartos de residuos deben quedar en presión negativa respecto a los espacios vecinos.']],
+    verify:'Escribe el área libre de las rejillas en la ficha del espacio.',
+    docs:[['inf',13,'Regímenes, pág. 13'],['ppt',2,'Lámina 2']]},
+   R6:{
+    iso:()=>ISO({W:5,D:4,H:3.2,els:[
+      {t:'box',x:.7,y:0,z:0,w:3,d:.7,h:2},{t:'box',x:3.4,y:2.4,z:0,w:1,d:1,h:1.1},
+      {t:'open',w:'L',a:1.2,b:2.8,z0:.2,z1:.7,k:'grille'},{t:'fan',w:'R',a:4.3,z:2.6,r:.35},
+      {t:'flow',p:[[-1.8,2,.45],[0,2,.45],[1.5,1.6,.6],[2.2,1,1.3]]},
+      {t:'flow',p:[[2.2,.9,2.1],[3.4,.6,2.5],[4.3,0,2.6],[4.3,-1.5,2.8]],c:'hot'},{t:'flow',p:[[3.9,2.9,1.2],[4.1,1.4,2.1],[4.3,.3,2.5]],c:'hot'},
+      {t:'n',p:[2.2,.35,2.5],n:1},{t:'n',p:[0,2,1],n:2},{t:'n',p:[4.3,0,3.2],n:3}]}),
+    secs:[
+      {name:'Tiro térmico',when:'Cuartos eléctricos, de bombas y de máquinas',txt:'Cuartos eléctricos, de bombas y de máquinas: toma baja y salida alta. El caudal depende del calor de los equipos.',
+       svg:()=>SEC(`<rect x="170" y="150" width="70" height="82" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/><rect x="260" y="170" width="60" height="62" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/>
+         ${grilleV(L,192,224)}${fl('M15,208 L110,208 L160,208')}${fl('M205,145 C210,110 300,95 410,92 L505,92','hot')}${fl('M290,165 C300,130 360,110 410,100','hot')}${grilleV(R,80,108)}${lb(205,140,'CALOR DE EQUIPOS')}`,{walls:roof()+wall(L,[[192,224]])+wall(R,[[80,108]]),outsideR:'EXTERIOR'})},
+      {name:'Climatización (data center)',when:'Data center y racks',txt:'Data center y racks requieren climatización mecánica; la ventilación natural no basta.',
+       svg:()=>SEC(`<rect x="200" y="140" width="34" height="92" fill="var(--surface-2)" stroke="var(--ink)"/><rect x="244" y="140" width="34" height="92" fill="var(--surface-2)" stroke="var(--ink)"/><rect x="288" y="140" width="34" height="92" fill="var(--surface-2)" stroke="var(--ink)"/>
+         <rect x="${R-60}" y="${T+6}" width="54" height="34" rx="4" fill="var(--mec-soft)" stroke="var(--mec)" stroke-width="2"/>${lb(R-66,T+28,'EQUIPO','end','var(--mec)')}
+         ${fl(`M${R-60},${T+30} C300,${T+30} 180,110 180,200`,'mec')}${fl('M340,150 C350,120 360,110 '+(R-34)+','+(T+42),'hot')}${lb(260,132,'RACKS')}`,{walls:roof()+wall(L)+wall(R),outsideL:'SIN FACHADA'})},
+      {name:'A través de otro espacio',when:'Cuartos eléctricos, data center, racks y RCI sin fachada (supuesto de eficiencia 0,2)',txt:'El recinto técnico toma y entrega el aire a un espacio vecino que sí tiene fachada. Es el supuesto conservador del cálculo y hay que verificarlo en planos.',
+       svg:()=>SEC(`<rect x="270" y="170" width="70" height="62" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/>${grilleV(250,190,222)}${grilleV(250,90,118)}${fl('M15,206 L110,206 L245,206 C300,206 330,180 320,150')}${fl('M300,140 C290,110 270,104 250,104 L110,104 L15,104','hot')}${lb(180,145,'ESPACIO')}${lb(180,160,'CON FACHADA')}${lb(330,150,'TÉCNICO')}`,{walls:roof()+wall(L,[[90,118],[190,222]])+wall(250,[[90,118],[190,222]])+wall(R),outsideR:''})},
+      {name:'Extracción forzada',when:'Salas de máquinas, cuartos de bombas y UMAs (40 renovaciones por hora)',txt:'Toma baja y extractor alto. El caudal de la columna de la tabla sirve como referencia para dimensionarlo.',
+       svg:()=>SEC(`<rect x="200" y="160" width="90" height="72" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1.5"/>${grilleV(L,192,224)}${fan(R,96)}${fl('M15,208 L110,208 L190,208')}${fl('M245,155 C255,120 330,100 395,97 L500,96','mec')}${lb(245,150,'MÁQUINAS')}${lb(R-20,130,'40 RENOV./H','end','var(--mec)')}`,{walls:roof()+wall(L,[[192,224]])+wall(R,[[82,110]])})}],
+    list:[['El caudal lo define la ingeniería','El requerimiento es indicativo: depende de la disipación térmica real de los equipos.'],
+      ['Toma baja','Aire fresco por una rejilla baja.'],
+      ['Salida alta o extracción','El aire caliente sube: salida alta o extractor. Las salas de máquinas se calcularon con 40 renovaciones por hora.'],
+      ['Recintos técnicos interiores','Se supuso que ventilan a través de otro espacio (eficiencia 0,2). Es un supuesto conservador que debe verificarse en planos.'],
+      ['Data center y racks','Requieren climatización mecánica.']],
+    verify:'Comparte el caudal de la ficha con la ingeniería: ella define la solución según los equipos.',
+    docs:[['inf',14,'Criterios, pág. 14'],['inf',20,'Recintos técnicos, pág. 20'],['ppt',3,'Lámina 3']]}
+  };
+
+  /* ---- isométrico propio de cada opción (mismo orden que las opciones de sección) ---- */
+  const r1 = els=>ISO({W:9,D:3.2,H:3.4,els:[{t:'ceil',fill:true},{t:'ghost',w:'B'},...els]});
+  const r1void = [{t:'open',w:'R',a:.5,b:2.7,z0:0,z1:3.4,k:'void'},{t:'open',w:'R',a:3.4,b:5.6,z0:0,z1:3.4,k:'void'},{t:'open',w:'R',a:6.3,b:8.5,z0:0,z1:3.4,k:'void'}];
+  const r2 = els=>ISO({W:6,D:5,H:3.2,els:[{t:'box',x:2.2,y:1.8,z:0,w:1.6,d:1,h:.75},...els]});
+  const r3base = [{t:'box',x:.4,y:0,z:.75,w:2.2,d:.55,h:.12},{t:'ghost',w:'B'},{t:'open',w:'B',a:.7,b:1.6,z0:0,z1:2.1,k:'door'},{t:'open',w:'B',a:.8,b:1.5,z0:.1,z1:.4,k:'grille'}];
+  const r3 = els=>ISO({W:4,D:3.2,H:3,els:[...r3base,...els]});
+  const r3duct = [{t:'box',x:2.4,y:1.2,z:3,w:.4,d:.4,h:1.1,fill:'var(--mec-soft)'},{t:'flow',p:[[1.15,4.6,.3],[1.15,3.2,.3],[2,2,1.2],[2.6,1.4,2.6],[2.6,1.4,4.3]],c:'mec'}];
+  const r4kit = (duct=true)=>[{t:'box',x:.8,y:0,z:0,w:4.2,d:.8,h:.9},{t:'box',x:.6,y:0,z:2.1,w:4.6,d:1.2,h:.45,fill:'var(--surface-2)'},
+    ...(duct?[{t:'box',x:2.6,y:.25,z:2.55,w:.7,d:.6,h:2.3,fill:'var(--accent-soft)'},{t:'flow',p:[[2.95,.55,2.2],[2.95,.55,5.4]],c:'hot'}]:[]),
+    {t:'ghost',w:'B'},{t:'open',w:'B',a:2.2,b:3.2,z0:0,z1:2.1,k:'door'}];
+  const r4 = els=>ISO({W:6,D:5,H:3.5,els});
+  const r4grille = [{t:'open',w:'L',a:2,b:4,z0:.4,z1:1.2,k:'grille'},{t:'flow',p:[[-2,3,.8],[0,3,.8],[2,2.2,1.2],[2.95,.9,1.9]]}];
+  const r5 = els=>ISO({W:4.5,D:3.5,H:3,els});
+  const shelves = {t:'box',x:.5,y:0,z:0,w:3.4,d:.6,h:2.1};
+  const r6 = els=>ISO({W:5,D:4,H:3.2,els});
+  const cab = [{t:'box',x:.7,y:0,z:0,w:3,d:.7,h:2},{t:'box',x:3.4,y:2.4,z:0,w:1,d:1,h:1.1}];
+  const ISOV = {
+    R1:[null,
+      ()=>r1([{t:'open',w:'R',a:.5,b:2.7,z0:0,z1:2.4,k:'window'},{t:'open',w:'R',a:3.4,b:5.6,z0:0,z1:2.4,k:'window'},{t:'open',w:'R',a:6.3,b:8.5,z0:0,z1:2.4,k:'window'},
+        {t:'open',w:'R',a:.5,b:2.7,z0:2.6,z1:3.2,k:'grille'},{t:'open',w:'R',a:3.4,b:5.6,z0:2.6,z1:3.2,k:'grille'},{t:'open',w:'R',a:6.3,b:8.5,z0:2.6,z1:3.2,k:'grille'},
+        {t:'open',w:'B',a:3.6,b:5.4,z0:1,z1:2.2,k:'window'},
+        {t:'flow',p:[[1.6,-2,2.9],[1.6,0,2.9],[4.5,2.6,1.8],[4.5,4.6,1.8]]},{t:'flow',p:[[7.4,-2,2.9],[7.4,0,2.9],[7.4,4.6,2.2]]},
+        {t:'lab',p:[4.5,-1.4,-.5],txt:'PANELES DE VIDRIO'},{t:'n',p:[4.5,0,3.7],n:3}]),
+      ()=>r1([...r1void,{t:'open',w:'B',a:3.4,b:5.6,z0:.9,z1:2.4,k:'window'},
+        {t:'flow',p:[[4.5,-2.2,1.6],[4.5,3.2,1.6],[4.5,4.4,2.4],[4.5,4.4,4.2]]},{t:'flow',p:[[1.6,-2.2,1.5],[1.6,4.6,1.5]]},
+        {t:'lab',p:[4.5,4.9,-.4],txt:'RECINTO R2'},{t:'n',p:[4.5,3.2,2.8],n:2}]),
+      ()=>r1([...r1void,{t:'box',x:0,y:-1.4,z:3.4,w:9,d:1.4,h:.15},
+        {t:'flow',p:[[1.6,-2.2,1.4],[1.6,4.6,1.4]]},{t:'flow',p:[[7.4,-2.2,1.6],[7.4,4.6,1.6]]},
+        {t:'lab',p:[4.5,-1.6,4.2],txt:'VOLADIZO'},{t:'n',p:[1.6,0,3.0],n:1}])],
+    R2:[null,
+      ()=>r2([{t:'open',w:'L',a:1.4,b:3.6,z0:.25,z1:.85,k:'window'},{t:'ghost',w:'F'},{t:'open',w:'F',a:1.6,b:3.4,z0:2.2,z1:2.9,k:'window'},
+        {t:'flow',p:[[-2.4,2.5,.55],[0,2.5,.55],[2.5,2.5,.95],[4.5,2.5,2.2],[6,2.5,2.55],[7.6,2.5,2.7]]},
+        {t:'lab',p:[7.4,2.5,-.3],txt:'ANILLO DE CIRCULACIÓN'},{t:'n',p:[0,2.5,1.15],n:1},{t:'n',p:[6,2.5,3.25],n:2}]),
+      ()=>r2([{t:'open',w:'L',a:1.4,b:3.6,z0:.9,z1:2.2,k:'window'},{t:'box',x:-1.3,y:3.6,z:.4,w:1.3,d:.14,h:2.4,fill:'var(--accent-soft)'},
+        {t:'ghost',w:'F'},{t:'open',w:'F',a:1.6,b:3.4,z0:1.6,z1:2.7,k:'window'},
+        {t:'flow',p:[[-.8,7.5,1.5],[-.8,4.2,1.5],[-.3,3.2,1.5],[0,2.6,1.5],[3,2.5,1.6],[6,2.5,2.1],[7.6,2.5,2.3]]},{t:'flow',p:[[-2,7.5,2],[-2,-1.5,2]]},
+        {t:'lab',p:[-.7,3.6,3.2],txt:'ALETA'},{t:'lab',p:[-2,7,2.6],txt:'BRISA PARALELA'},{t:'n',p:[0,2.5,2.5],n:1}]),
+      ()=>r2([{t:'open',w:'L',a:1.4,b:3.6,z0:.3,z1:1,k:'window'},{t:'open',w:'L',a:1.4,b:3.6,z0:2.1,z1:2.8,k:'window'},
+        {t:'flow',p:[[-2.2,2.5,.6],[0,2.5,.6],[3,2.5,1],[3.2,2.5,2.2],[0,2.5,2.45],[-2.2,2.5,2.6]]},
+        {t:'n',p:[0,2.5,1.3],n:1},{t:'n',p:[0,2.5,3.05],n:2}]),
+      ()=>r2([{t:'open',w:'L',a:1.4,b:3.6,z0:.9,z1:2.2,k:'grille'},{t:'box',x:-.9,y:1.2,z:2.35,w:.9,d:2.6,h:.12},{t:'ghost',w:'F'},{t:'open',w:'F',a:1.6,b:3.4,z0:1.6,z1:2.7,k:'window'},
+        {t:'flow',p:[[-2.4,2.5,1.5],[0,2.5,1.5],[3,2.6,1.6],[6,2.5,2.1],[7.6,2.5,2.3]]},{t:'lab',p:[-1.6,2.5,3.3],txt:'LAMAS + ALERO'},{t:'n',p:[-.5,2.5,2.75],n:3}]),
+      ()=>r2([{t:'ghost',w:'F'},{t:'open',w:'F',a:1.6,b:3.4,z0:.3,z1:1,k:'window'},{t:'open',w:'F',a:1.6,b:3.4,z0:2.1,z1:2.8,k:'window'},
+        {t:'flow',p:[[7.6,2.5,.6],[6,2.5,.6],[3,2.5,1],[2.8,2.5,2.2],[6,2.5,2.45],[7.6,2.5,2.6]]},
+        {t:'lab',p:[7.6,2.5,3.5],txt:'CIRCULACIÓN ABIERTA'},{t:'lab',p:[-1.2,2.5,-.2],txt:'SIN FACHADA'},{t:'n',p:[6,2.5,1.3],n:1}]),
+      ()=>r2([{t:'open',w:'L',a:1.4,b:3.6,z0:.9,z1:2.2,k:'window'},{t:'box',x:3.2,y:0,z:2.35,w:1.4,d:.4,h:.5,fill:'var(--mec-soft)'},
+        {t:'flow',p:[[3.9,.45,2.3],[3.9,2.5,1.2],[2,2.8,1],[1.2,1.2,2],[3.2,.45,2.6]],c:'mec'},
+        {t:'lab',p:[-1.4,2.5,2.9],txt:'VENTANA DE RESPALDO'},{t:'n',p:[3.9,0,3.2],n:5},{t:'n',p:[0,2.5,2.5],n:1}])],
+    R3:[
+      ()=>r3([{t:'open',w:'L',a:.8,b:2.4,z0:2.05,z1:2.65,k:'grille'},{t:'flow',p:[[1.15,4.6,.3],[1.15,3.2,.3],[1.8,1.8,1.2],[1.6,.6,2.3],[0,1.6,2.35],[-1.8,1.6,2.5]]},
+        {t:'n',p:[0,1.6,2.95],n:1},{t:'n',p:[1.15,3.2,.75],n:3}]),
+      null,
+      ()=>r3([...r3duct,{t:'lab',p:[-1,1.6,-.3],txt:'SIN FACHADA'},{t:'n',p:[2.6,1.4,3.7],n:2},{t:'n',p:[1.15,3.2,.75],n:3}]),
+      ()=>r3([{t:'open',w:'L',a:.8,b:2.4,z0:.2,z1:.6,k:'grille'},{t:'open',w:'L',a:.8,b:2.4,z0:2.1,z1:2.65,k:'grille'},
+        {t:'flow',p:[[-1.8,1.6,.4],[0,1.6,.4],[2,1.6,1],[2,1.6,2.2],[0,1.6,2.4],[-1.8,1.6,2.5]]},{t:'n',p:[0,1.6,2.95],n:1}]),
+      ()=>r3([...r3duct,{t:'lab',p:[1.6,5,2.6],txt:'ESPACIO CLIMATIZADO'},{t:'n',p:[2.6,1.4,3.7],n:4}]),
+      ()=>r3([...r3duct,{t:'flow',p:[[1,1.4,.2],[1.1,1.6,1.4],[1.4,1.4,2.6]],c:'hot'},{t:'flow',p:[[3,2.4,.2],[3,2.3,1.4],[2.8,1.6,2.6]],c:'hot'},
+        {t:'lab',p:[2,2,0],txt:'VAPOR'},{t:'n',p:[2.6,1.4,3.7],n:2}])],
+    R4:[null,
+      ()=>r4([...r4kit(),{t:'box',x:.6,y:3.6,z:3.5,w:.5,d:.5,h:1.4,fill:'var(--mec-soft)'},{t:'flow',p:[[.85,3.85,4.8],[.85,3.85,3.2],[2,2.2,1.6],[2.95,1,1.95]],c:'mec'},
+        {t:'lab',p:[-1,3,-.2],txt:'SIN FACHADA'},{t:'n',p:[1.2,.6,2.75],n:1},{t:'n',p:[.85,3.85,4.4],n:3}]),
+      ()=>r4([...r4kit(),...r4grille,{t:'flow',p:[[2.7,6.8,1.1],[2.7,5,1.1],[2.9,2.4,1.5],[2.95,1,1.95]]},{t:'flow',p:[[7.5,2.8,1],[6,2.8,1],[4,1.8,1.4],[3.1,1,1.9]]},
+        {t:'lab',p:[3,3,0],txt:'PRESIÓN NEGATIVA'},{t:'n',p:[2.7,5,2.5],n:4}]),
+      ()=>ISO({W:4,D:3,H:3,els:[{t:'box',x:.4,y:0,z:0,w:2.6,d:.7,h:.9},{t:'box',x:.3,y:0,z:1.9,w:2.8,d:1,h:.4,fill:'var(--surface-2)'},{t:'box',x:1.4,y:.2,z:2.3,w:.6,d:.5,h:1.8,fill:'var(--accent-soft)'},
+        {t:'ghost',w:'F'},{t:'open',w:'F',a:.3,b:2.7,z0:1,z1:2.4,k:'void'},{t:'box',x:3.3,y:.3,z:0,w:.6,d:2.4,h:1},
+        {t:'flow',p:[[5.6,1.5,1.7],[4,1.5,1.7],[2.6,1.2,1.7],[1.7,.6,1.9]]},{t:'flow',p:[[1.7,.45,2],[1.7,.45,4.5]],c:'hot'},
+        {t:'lab',p:[5.4,1.5,.2],txt:'CIRCULACIÓN'},{t:'n',p:[.6,.5,2.6],n:1}]}),
+      ()=>r4([...r4kit(false),...r4grille,{t:'box',x:2.6,y:.25,z:2.55,w:.7,d:.6,h:.7,fill:'var(--accent-soft)'},{t:'box',x:2.6,y:.25,z:3.0,w:4.6,d:.6,h:.45,fill:'var(--accent-soft)'},
+        {t:'ghost',w:'F'},{t:'flow',p:[[2.95,.55,2.2],[2.95,.55,3.22],[8,.55,3.22]],c:'hot'},
+        {t:'lab',p:[7.6,.5,4.1],txt:'FACHADA A SOTAVENTO'},{t:'n',p:[6.4,.55,3.95],n:2}]),
+      ()=>r4([...r4kit(false),{t:'box',x:2.6,y:.25,z:2.55,w:.7,d:.6,h:2.25,fill:'var(--accent-soft)'},{t:'box',x:.6,y:3.6,z:3.5,w:.5,d:.5,h:1.3,fill:'var(--mec-soft)'},
+        {t:'box',x:.4,y:.2,z:4.8,w:3.1,d:4.1,h:.5},{t:'flow',p:[[2.95,.55,2.2],[2.95,.55,4.75]],c:'hot'},{t:'flow',p:[[.85,3.85,4.75],[.85,3.85,3.2],[2,2.2,1.6],[2.95,1,1.95]],c:'mec'},
+        {t:'lab',p:[2,2.2,6],txt:'RECUPERADOR DE CALOR'},{t:'n',p:[1.2,.6,2.75],n:1},{t:'n',p:[.85,3.85,4.1],n:3}])],
+    R5:[null,
+      ()=>r5([{t:'box',x:.5,y:.3,z:0,w:.9,d:.9,h:1},{t:'box',x:1.7,y:.3,z:0,w:.9,d:.9,h:1},{t:'fan',w:'R',a:3.6,z:2.45,r:.32},
+        {t:'ghost',w:'B'},{t:'open',w:'B',a:.7,b:1.6,z0:0,z1:2.1,k:'door'},{t:'open',w:'B',a:.8,b:1.5,z0:.1,z1:.4,k:'grille'},
+        {t:'flow',p:[[1.15,5,.3],[1.15,3.5,.3],[2.4,1.8,1.5],[3.6,0,2.45],[3.6,-1.5,2.6]],c:'mec'},{t:'lab',p:[2.6,2.4,0],txt:'PRESIÓN NEGATIVA'},{t:'n',p:[3.6,0,3],n:3}]),
+      ()=>r5([shelves,{t:'ghost',w:'B'},{t:'open',w:'B',a:.6,b:1.5,z0:0,z1:2.1,k:'door'},{t:'open',w:'B',a:.7,b:1.4,z0:.1,z1:.4,k:'grille'},{t:'open',w:'B',a:2.6,b:3.8,z0:2.2,z1:2.6,k:'grille'},
+        {t:'flow',p:[[1.05,5,.3],[1.05,3.5,.3],[2,2,1.2],[3.2,3,2.2],[3.2,3.5,2.4],[3.2,5,2.5]]},{t:'lab',p:[-.9,1.7,-.2],txt:'SIN FACHADA'},{t:'n',p:[1.05,3.5,.75],n:1},{t:'n',p:[3.2,3.5,2.95],n:2}]),
+      ()=>r5([{t:'box',x:.5,y:0,z:0,w:1.6,d:.7,h:.9},{t:'open',w:'L',a:1,b:2.4,z0:.2,z1:.6,k:'grille'},{t:'fan',w:'R',a:3.7,z:2.45,r:.32},
+        {t:'flow',p:[[1.3,.5,1],[1.5,.9,1.8],[1.3,.7,2.6]],c:'hot'},{t:'flow',p:[[-1.8,1.7,.4],[0,1.7,.4],[2.2,1.6,1.2],[3.7,0,2.45],[3.7,-1.5,2.6]],c:'mec'},
+        {t:'lab',p:[1.6,.8,3.1],txt:'HUMEDAD'},{t:'n',p:[0,1.7,.95],n:1}])],
+    R6:[
+      ()=>r6([...cab,{t:'open',w:'L',a:1.2,b:2.8,z0:.2,z1:.7,k:'grille'},{t:'open',w:'R',a:3.8,b:4.8,z0:2.4,z1:2.9,k:'grille'},
+        {t:'flow',p:[[-1.8,2,.45],[0,2,.45],[1.5,1.6,.6],[2.2,1,1.3]]},{t:'flow',p:[[2.2,.9,2.1],[3.4,.6,2.5],[4.3,0,2.65],[4.3,-1.5,2.8]],c:'hot'},
+        {t:'n',p:[2.2,.35,2.5],n:1},{t:'n',p:[0,2,1],n:2},{t:'n',p:[4.3,0,3.25],n:3}]),
+      ()=>r6([{t:'box',x:1,y:1.2,z:0,w:.6,d:1.8,h:2},{t:'box',x:2,y:1.2,z:0,w:.6,d:1.8,h:2},{t:'box',x:3,y:1.2,z:0,w:.6,d:1.8,h:2},{t:'box',x:3.6,y:0,z:2.3,w:1.2,d:.4,h:.6,fill:'var(--mec-soft)'},
+        {t:'flow',p:[[4.2,.45,2.25],[4.2,1,.4],[2.5,3.4,.5],[1.3,3.4,2.4],[3.7,.45,2.75]],c:'mec'},{t:'lab',p:[-1,2,-.2],txt:'SIN FACHADA'},{t:'n',p:[4.2,0,3.2],n:5}]),
+      ()=>r6([...cab,{t:'ghost',w:'B'},{t:'open',w:'B',a:1,b:2.4,z0:.2,z1:.7,k:'grille'},{t:'open',w:'B',a:2.8,b:4.2,z0:2.3,z1:2.8,k:'grille'},
+        {t:'flow',p:[[1.7,5.6,.45],[1.7,4,.45],[2,1.8,1]]},{t:'flow',p:[[2.2,.9,2.1],[3.5,3,2.5],[3.5,4,2.55],[3.5,5.6,2.6]],c:'hot'},
+        {t:'lab',p:[2.5,5.4,2.9],txt:'ESPACIO CON FACHADA'},{t:'lab',p:[-1,2,-.2],txt:'SIN FACHADA'},{t:'n',p:[3.5,4,3.15],n:4}]),
+      null]
+  };
+
+  let cur=loadPref('estR','R2'), sv=0;
+  function render(){
+    const C=RG[cur], G=REG[cur], n=SP.filter(s=>s.r===cur);
+    $('#estRegs').innerHTML=Object.keys(RG).map(k=>`<button class="est-reg" style="--c:var(${REG[k].c})" data-r="${k}" aria-pressed="${k===cur}"><b>${k}</b><span>${REG[k].short}</span></button>`).join('');
+    $('#estTitle').textContent=`${cur} · ${G.name}`;
+    $('#estMeta').textContent=`${n.length} espacios · ${f0(n.reduce((a,s)=>a+s.at,0))} m² de abertura requerida · ${READ[cur]}`;
+    $('#estIncl').textContent=G.incl;
+    const IV=ISOV[cur]&&ISOV[cur][sv]; $('#estIso').innerHTML=(IV||C.iso)();
+    $('#estSecTabs').innerHTML=C.secs.map((x,i)=>`<button data-i="${i}" aria-pressed="${i===sv}">${x.name}</button>`).join('');
+    $('#estSec').innerHTML=C.secs[sv].svg(); const V=C.secs[sv]; $('#estSecTxt').innerHTML=(V.when?`<span class="est-when">Aplica en: ${esc(V.when)}</span>`:'')+esc(V.txt);
+    $('#estList').innerHTML=C.list.map(([a,b],i)=>`<li data-n="${i+1}"><b>${a}</b>${b}</li>`).join('');
+    $('#estVerify').textContent=C.verify;
+    $('#estLinks').innerHTML=C.docs.map(([d,p,l])=>`<button class="btn" data-doc="${d}" data-pg="${p}">${l}</button>`).join('')+`<button class="btn primary" id="estGo">Ver los ${n.length} espacios ${cur}</button>`;
+    $('#estGo').onclick=()=>goFilter({r:cur});
+    $('#estIso').querySelectorAll('.co').forEach(c=>{ const ok=C.list.length>=+c.dataset.n; if(!ok) c.remove(); });
+  }
+  const hl=n=>{ document.querySelectorAll('#view-estrategias .co').forEach(c=>c.classList.toggle('on',c.dataset.n===n)); document.querySelectorAll('#estList li').forEach(l=>l.classList.toggle('on',l.dataset.n===n)); };
+  $('#estRegs').addEventListener('click',e=>{ const b=e.target.closest('[data-r]'); if(b){ cur=b.dataset.r; sv=0; savePref('estR',cur); render(); } });
+  $('#estSecTabs').addEventListener('click',e=>{ const b=e.target.closest('[data-i]'); if(b){ sv=+b.dataset.i; render(); } });
+  $('#estList').addEventListener('mouseover',e=>{ const l=e.target.closest('li'); if(l) hl(l.dataset.n); });
+  $('#estList').addEventListener('mouseleave',()=>hl(''));
+  $('#estIso').addEventListener('mouseover',e=>{ const c=e.target.closest('.co'); hl(c?c.dataset.n:''); });
+  return {render, open:(r)=>{ cur=r; sv=0; savePref('estR',cur); location.hash='estrategias'; window.scrollTo(0,0); render(); }};
+})();
+
+
+/* ---------- navegación ---------- */
+const VIEWS=['espacios','resumen','estrategias','documentos','guia'];
+function route(){
+  const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'espacios';
+  VIEWS.forEach(x=>{ $('#view-'+x).hidden = x!==v; const t=$('#tab-'+x); t.setAttribute('aria-selected', x===v); });
+  if(v==='resumen') renderSummary(); if(v==='estrategias') EST.render(); if(v==='documentos') renderDoc(); if(v==='guia'){ VID.build(); tourGo(TI); } else { TT.clear(); VID.pause(); }
+  savePref('view',v);
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{ location.hash=t.dataset.view; });
+window.addEventListener('hashchange',route);
+
+$('#q').value=F.q; $('#sort').value=F.sort;
+if(window.matchMedia('(max-width:860px)').matches){ $('#side').classList.add('collapsed'); $('#ftoggle').setAttribute('aria-expanded','false'); }
+if(!location.hash){ const v=loadPref('view','espacios'); if(v!=='espacios') history.replaceState(null,'','#'+v); }
+update(); route();
+})();
+</script>
+
+</body>
+</html>
